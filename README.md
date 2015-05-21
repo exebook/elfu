@@ -13,7 +13,8 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 - Editors known to be Elfu-friendly are Sublime Text, Geany, Deodar.
 - If your computer does not show all symbols, there is a font file *[elfu.ttf][100]*.
 - Elfu only uses Unicode standard symbols.
-- Elfu is *mostly* reversable, in other words you can convert .yy->.js and .js->.yy. *Mostly*.
+- Elfu is *mostly* reversable, in other words you can convert `.yy->.js` and `.js->.yy`. *Mostly*.
+- Read this document in better font [here][102].
 [100]: http://exebook.github.io/fonts/elfu.ttf
 
 # Contents
@@ -218,12 +219,12 @@ A ⬊ (2 + 2)
 ```
 ---
 ##### superscript indexing `Xⁱ`
- - aⁱ translates to `a[i]`.
- - a⁰ translates to `a[0]`.
- - aⁱ⁰ translates to `a[i][0]`.
+ - `aⁱ` translates to `a[i]`.
+ - `a⁰` translates to `a[0]`.
+ - `aⁱ⁰` translates to `a[i][0]`.
  - typed as `.i|TAB` or `.1|TAB`.
  - super-script index can only be single character.
- - supported are all lowercase latin characters and digits 0-9.
+ - supported are all lowercase latin characters and digits `0`-`9`.
  - do not try to use UPPERCASE characters.
  - do not try to use multicharacter variables like `count`.
 
@@ -555,6 +556,7 @@ s ∆ 'hello world!'
  - read [dotcall README][101] for details.
 
 [101]: https://github.com/exebook/dotcall
+[102]: http://exebook.github.io/elfu/article.html
 
 #Feedback
  - post your ideas and other feedback in *issues* on github page.

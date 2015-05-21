@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-var dc = require('elfu')
+var elfu = require('elfu')
+if (name == '-v' || name == '--version') {
+	console.log(elfu.version)
+	return
+}
 var fs = require('fs')
 var js2yy = require('../js2yy.yy')
 var fin = process.argv[2]

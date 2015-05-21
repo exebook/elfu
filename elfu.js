@@ -1,3 +1,5 @@
+module.exports.version = '0.0.10'
+
 var fs = require('fs')
 var convertor = require('./convert')
 
