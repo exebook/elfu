@@ -21,11 +21,13 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
  - [Syntax][2]
  - [Usage][3]
  - [Dotcall syntax][4]
+ - [Feedback][5]
  
 [1]: https://github.com/exebook/elfu/blob/master/README.md#screenshot
 [2]: https://github.com/exebook/elfu/blob/master/README.md#syntax
 [3]: https://github.com/exebook/elfu/blob/master/README.md#usage
 [4]: https://github.com/exebook/elfu/blob/master/README.md#dotcall-syntax
+[5]: https://github.com/exebook/elfu/blob/master/README.md#feedback
 
 #Screenshot
 Here is how Elfu looks in author's editor:
@@ -499,3 +501,10 @@ s ∆ 'hello world!'
  - read [dotcall README][101] for details.
 
 [101]: https://github.com/exebook/dotcall
+
+#Feedback
+ - post your ideas and other feedback in *issues* on github page.
+ - Github page is https://github.com/exebook/elfu.
+ - author's email: `exebook gmail com`
+ - author's VK page: http://vk.com/chucknorrisgriboedov
+ 
