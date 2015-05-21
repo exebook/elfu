@@ -3,8 +3,8 @@
 Elfu is highly experimental symbolic language. UNICODE contains thousands and thousands of symbols, why not use them?
 
 - Elfu stands for elvish functional language or elvish numeric gongfu.
-- Elfu in elvish is pronounced *hosti lammen*, or *computing language*.
-- Elfu is Javascript compatible, you can just use Javascript in Elfu file.
+- Elfu in elvish is called *hosti lammen*, or *computing language*.
+- Elfu is Javascript compatible, you mix Javascript and Elfu in Elfu file.
 - Elfu file extension is **.yy** *(this is elvish)*
 - Elfu is written in Javascript itself.
 - To type symbols we use TAB completion feature of the editor.
@@ -13,6 +13,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 - Editors known to be Elfu-friendly are Sublime Text, Geany, Deodar.
 - If your computer does not show all symbols, there is a font file *[elfu.ttf][1]*.
 - Elfu only uses Unicode standard symbols.
+- Elfu is *mostly* reversable, in other words you can convert .yy->.js and .js->.yy. *Mostly*.
 
 [1]: http://exebook.github.io/fonts/elfu.ttf
 ---
