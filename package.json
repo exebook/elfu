@@ -1,0 +1,31 @@
+{
+  "main": "./elfu.js",
+  "name": "elfu",
+  "description": "Programming language that elves use",
+  "version": "0.0.7",
+  "bin": {
+    "yy": "./bin/yy",
+    "yyj": "./bin/yyj",
+    "jyy": "./bin/jyy"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/exebook/elfu.git"
+  },
+  "keywords": [
+    "javascript",
+    "sugar",
+    "syntax",
+    "syntax sugar",
+    "elvish"
+  ],
+  "author": "Yakov Sudeikin-Nivin",
+  "license": "Public domain(unlicense)",
+  "bugs": {
+    "url": "https://github.com/exebook/elfu/issues"
+  },
+  "homepage": "https://github.com/exebook/elfu"
+}

@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+// --max_old_space_size=1400 --max_new_space_size=1024
+var name = process.argv[2]
+if (name == undefined) {
+	console.log('elfu error: no input file')
+	return
+}
+elfu = require('elfu')
+elfu.handleExt('.yy')
+elfu.userSym('⏚', 'ground')
+module.paths.push(process.cwd())
+
+if (name[0] == '.') name = process.cwd() + '/' + name
+
+elfu.require(name)
+
