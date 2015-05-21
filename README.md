@@ -17,7 +17,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 - if you omit any arguments, arguments `a` `b` `c` are default.
 - use `➮f(){}` syntax to declare a function without arguments.
 
-```
+```javascript
 ➮ compare (a, b) { console.log(a == b) }
 ➮ compare a b { console.log(a == b) }
 ➮ compare { console.log(a == b) }
@@ -26,8 +26,8 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 ##### return statement `$`
  - `$` is replaced with `return`
 
-```
-    $ 2 + 2
+```javascript
+$ 2 + 2
 ```
 
 ##### each looping `⬌`
@@ -35,12 +35,22 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
  - enough typing `for (var i = 0; i < obj.length; i++)`
  - just type `i ⬌ obj`, it converts to the above.
 
-```
-	var a = [1,2,3]
-	i ⬌ a console.log(a[i])
+```javascript
+var a = [1,2,3]
+i ⬌ a console.log(a[i])
 ```
 
 ##### console.log `ロ`
  - typed as `lo|TAB`
  - this is Chinese/Japanese character for *mouth*.
- 
+ - tired typing console.log hundreds times a day?
+ - ロ takes everything until the end of line or `;` as arguments.
+ - make sure you add ';' if your code continues on this line.
+
+```javascript
+ロ 'hello world!'
+ロ 'numbers are:', 1, 2, 3
+if (true) ロ 'here'
+➮ compare { ロ a == b; }
+```
+
