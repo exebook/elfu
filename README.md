@@ -19,6 +19,8 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 # Contents
  - [Screenshot][1]
  - [Syntax][2]
+  - [function definition ➮][201]
+  - [symbolic variables][226]
  - [Usage][3]
  - [Dotcall syntax][4]
  - [Feedback][5]
@@ -43,13 +45,12 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 [212]: https://github.com/exebook/elfu#comparison-operators--and-
 [213]: https://github.com/exebook/elfu#clean-and-visible-semicolon-
 [214]: https://github.com/exebook/elfu#delete-and-new-are--and-
-
 [215]: https://github.com/exebook/elfu#length-of-an-array-or-a-string-
 [216]: https://github.com/exebook/elfu#require-directive-
 [217]: https://github.com/exebook/elfu#math-functions---
 [218]: https://github.com/exebook/elfu#infinite-loop-
 [219]: https://github.com/exebook/elfu#time-operations---
-[220]: https://github.com/exebook/elfu#FSFSFS
+[220]: https://github.com/exebook/elfu#nodejs-fs-functions--
 [221]: https://github.com/exebook/elfu#str-serialization-with---
 [222]: https://github.com/exebook/elfu#booleans--and-
 [223]: https://github.com/exebook/elfu#last-item-of-a-string-or-an-array-%EA%95%89-
