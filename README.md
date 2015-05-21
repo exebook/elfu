@@ -3,16 +3,18 @@
 Elfu is highly experimental symbolic language. UNICODE contains thousands and thousands of symbols, why not use them?
 
 - Elfu stands for elvish functional language or elvish numeric gongfu.
-- Elfu in elvish is pronounced *hosti lammen*.
+- Elfu in elvish is pronounced *hosti lammen*, or *computing language*.
 - Elfu is Javascript compatible, you can just use Javascript in Elfu file.
-- Elfu is written in Javascript itself.
 - Elfu file extension is **.yy** *(this is elvish)*
+- Elfu is written in Javascript itself.
 - To type symbols we use TAB completion feature of the editor.
 - Most of symbols are just replaced with their Javascript counterparts.
 - Some symbols are parsed in a special way, like `➮` or `⬌`.
 - Editors known to be Elfu-friendly are Sublime Text, Geany, Deodar.
-- If your computer does not show all symbols, there is a font file *elfu.ttf*.
+- If your computer does not show all symbols, there is a font file *[elfu.ttf][1]*.
+- Elfu only uses Unicode standard symbols.
 
+[1]: http://exebook.github.io/fonts/elfu.ttf
 ---
 #####function definition `➮`
 - typed as `fu|TAB`.
@@ -50,12 +52,14 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 ```
 
 ---
-##### break statement `@`
+##### break and continue statements `@`
  - `@` is replaced with `break`.
+ - `♻` is replaced with `continue`.
 
 ```javascript
 ⧖ (true) {
 	step()
+	if (again()) ♻
 	if (finished()) @
 }
 ```
@@ -104,6 +108,8 @@ if (true) ロ 'here'
  - typed as `va|TAB`, `de|TAB`.
  - `∇` is replaced with `var`.
  - `∆ x` is translated to `var x =`.
+ - `∆` reads as *is defined as* or just *define*.
+ - `∆` supposed to be *delta*, but in fact it is a simplified form of a math symbol `≜` -- *definition* or *is defined as*.
  
 ```javascript
 x ∆ 100
@@ -296,25 +302,34 @@ T ∆ ⚡ ⦙ s ∆ ''
 ロ 'benchmark: ', ⚡ - T, 'ms'
 ```
 
----
+--- str serialization with `⌶` `≂` `⫴`.
 #####
  - 
 
 ```javascript
 ```
 
----
+--- node.js `fs` functions `⛁`, `⛃`
 #####
- - 
+ - `⛁` is replaced with `fs.readFileSync`.
+ - `⛃` is replaced with `fs.writeFileSync`.
+ - `⛁` is typed `fsrs|TAB`.
+ - `⛃` is typed `fsws|TAB`.
 
 ```javascript
 ```
 
 ---
-#####
- - 
+##### booleans `⦿` and `⦾`
+ - `⦿` is replaced with `true`.
+ - `⦾` is replaced with `false`.
+ - `⦿` is typed as `tr|TAB`.
+ - `⦾` is typed as `fa|TAB`.
 
 ```javascript
+	a ∆ ⦿
+	⌥ (a) a = ⦾
+	b ∆ { initialized: ⦾ }
 ```
 
 ---
