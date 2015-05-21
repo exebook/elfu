@@ -10,6 +10,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 - Most of symbols are just replaced with their Javascript counterparts.
 - Some symbols are parsed in a special way, like `➮` or `⬌`.
 
+---
 #####function definition `➮`
 - typed as "fu|TAB"
 - Elfu translator will replace `➮` with `function`. 
@@ -23,6 +24,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 ➮ compare { console.log(a == b) }
 ```
 
+---
 ##### return statement `$`
  - `$` is replaced with `return`
 
@@ -30,6 +32,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 $ 2 + 2
 ```
 
+---
 ##### each looping `⬌`
  - typed as "ea|TAB"
  - enough typing `for (var i = 0; i < obj.length; i++)`
@@ -40,6 +43,7 @@ var a = [1,2,3]
 i ⬌ a console.log(a[i])
 ```
 
+---
 ##### console.log `ロ`
  - typed as `lo|TAB`
  - this is Chinese/Japanese character for *mouth*.
