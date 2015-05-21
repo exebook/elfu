@@ -10,6 +10,8 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 - To type symbols we use TAB completion feature of the editor.
 - Most of symbols are just replaced with their Javascript counterparts.
 - Some symbols are parsed in a special way, like `➮` or `⬌`.
+- Editors known to be Elfu-friendly are Sublime Text, Geany, Deodar.
+- If your computer does not show all symbols, there is a font file *elfu.ttf*.
 
 ---
 #####function definition `➮`
