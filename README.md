@@ -24,7 +24,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 [1]: https://github.com/exebook/elfu/blob/master/README.md#screenshot
 [2]: https://github.com/exebook/elfu/blob/master/README.md#syntax
 [3]: https://github.com/exebook/elfu/blob/master/README.md#usage
-
+[4]: https://github.com/exebook/elfu/blob/master/README.md#Dotcall syntax
 
 #Screenshot
 Here is how Elfu looks in author's editor:
@@ -491,3 +491,10 @@ s ∆ 'hello world!'
  - `jyy program.js` convert Javascript to Elfu.
  - `require('elfu'); require('example.yy')` you can require modules written in Elfu.
 
+
+#Dotcall syntax
+ - Elfu supports *dotcall* syntax.
+ - dotcall is callback hell remedy.
+ - read [dotcall README][101] for details.
+
+[101]: https://github.com/exebook/dotcall
