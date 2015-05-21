@@ -98,8 +98,6 @@ function elfuConvert(s, fileName) {
 	findStrEqu(R, '≈', '=')
 	findStrEqu(R, '∼', '==')
 	findStrEqu(R, '≁', '!=')
-	simpleReplace(R, '⌶', '.split')
-	simpleReplace(R, '⫴', '.join')
 	simpleReplace(R, '⋃', '.slice')
 	simpleReplace(R, '⨄', '.splice')
 	simpleReplace(R, 'ꔬ', '.filter')
@@ -111,10 +109,12 @@ function elfuConvert(s, fileName) {
 	simpleReplace(R, '◬', '.charCodeAt')
 	
 //TODO: autoparen for toString(XXX) and others
+	autoArg(R, '⌶', '.split')
+	autoArg(R, '⫴', '.join')
 	autoArg(R, '≂', '.toString')
 // 	simpleReplace(R, '≂', '.toString')
  	autoArg(R, '≀', '.indexOf')
- 	simpleReplace(R, '≀≀', '.lastIndexOf')
+ 	autoArg(R, '≀≀', '.lastIndexOf')
  	simpleReplace(R, '⦙', ';')
  	simpleReplace(R, '★', 'parseInt')
 	autoArg(R, '⬠', 'Math.round')

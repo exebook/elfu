@@ -1,5 +1,5 @@
 var fs = require('fs')
-var dcconvert = require('./convert')
+var convertor = require('./convert')
 
 loadFile = function(module, filename) {
 	var raw, s
@@ -11,7 +11,7 @@ loadFile = function(module, filename) {
 	}
 	var t = filename
 //	console.time(t)
-	var yy = dcconvert.elfuConvert(s, filename)
+	var yy = convertor.elfuConvert(s, filename)
 //	console.timeEnd(t)
 	var R = module._compile(yy, filename)
 	return R
@@ -24,8 +24,8 @@ if (require.extensions) {
 module.exports.require = function(f) {
 	loadFile(module, f)
 }
-module.exports.convert = dcconvert.elfuConvert
-module.exports.userSym = dcconvert.userSym
+module.exports.convert = convertor.elfuConvert
+module.exports.userSym = convertor.userSym
 module.exports.handleExt = function(ext) {
 	if (require.extensions) {
 	   require.extensions[ext] = loadFile

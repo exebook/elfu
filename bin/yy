@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 // --max_old_space_size=1400 --max_new_space_size=1024
 var name = process.argv[2]
+if (name == '-v' || name == '--version') {
+	console.log('0.0.10')
+	//console.log(require('package.json').version)
+}
 if (name == undefined) {
 	console.log('elfu error: no input file')
 	return

@@ -65,14 +65,21 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 ```
 
 ---
-##### each looping `⬌`
- - typed as `ea|TAB`.
- - enough typing `for (var i = 0; i < obj.length; i++)`.
+##### each looping `⬌` and `⬍`
+ - `⬌` typed as `ea|TAB`.
+ - compiles to `for (var i = 0; i < obj.length; i++)`.
  - just type `i ⬌ obj`, it converts to the above.
+ - `⬍` typed as `fe|TAB`.`
+ - simply converts to `.forEach`.
 
 ```javascript
 var a = [1,2,3]
 i ⬌ a console.log(a[i])
+```
+
+```javascript
+A ∆ [1,2,3,4]
+A ⬍ (➮ { ロ a ; })
 ```
 
 ---
@@ -228,7 +235,7 @@ x ∆ 0
 ---
 ##### require directive ≣
  - typed as `re|TAB`.
- - ≣ is replaced with `require`.
+ - `≣` is replaced with `require`.
  - you can use `(` and `)` or avoid them.
  
 ```javascript
@@ -239,11 +246,11 @@ spawn ∆ ≣ ('child_process').spawn
 ---
 #####Math functions `⍽` `⬠` `⚂`
  - `⚂` is typed as `ra|TAB`.
- - `⚂` is converted to Math.random()
+ - `⚂` is converted to `Math.random()`
  - `⬠` is typed as `ro|TAB`.
- - `⬠` is converted to Math.round()
+ - `⬠` is converted to `Math.round()`
  - `⍽` is typed as `fl|TAB`.
- - `⍽` is converted to Math.floor()
+ - `⍽` is converted to `Math.floor()`
  - `⬠` and `⍽` can omit `(` and `)` for simple expressions.
  
 ```javascript
@@ -302,13 +309,6 @@ T ∆ ⚡ ⦙ s ∆ ''
 ロ 'benchmark: ', ⚡ - T, 'ms'
 ```
 
---- str serialization with `⌶` `≂` `⫴`.
-#####
- - 
-
-```javascript
-```
-
 --- node.js `fs` functions `⛁`, `⛃`
 #####
  - `⛁` is replaced with `fs.readFileSync`.
@@ -317,6 +317,34 @@ T ∆ ⚡ ⦙ s ∆ ''
  - `⛃` is typed `fsws|TAB`.
 
 ```javascript
+```
+
+---
+##### str serialization with `⌶` `⫴` `≂`.
+ - `⌶` is typed as `sp|TAB`.
+ - `⫴` is typed as `jo|TAB`.
+ - `≂` is typed as `ts|TAB`.
+ - `⌶` is compiled as `.split`
+ - `⫴` is compiled as `.join`
+ - you can omit `(` and `)` for simple expressions with `⌶`, `⫴` and `≂`.
+ - `≂` is converted to `.toString`
+
+```javascript
+// replace all occurences of "-" with "+"
+ロ '1-2-3-4-5' ⌶ '-' ⫴ '+'
+// same with ( and )
+s ∆ '-+'
+ロ '1-2-3-4-5' ⌶ (s⁰) ⫴ (s¹)
+```
+
+```javascript
+x ∆ 123.456
+ロ 'length of string representation of number', x, 'is', x≂↥	
+```
+
+```javascript
+fs ∆ ≣ 'fs'
+ロ 'Readme contains: ' + ⛁ ('README.md') ≂ ⌶ '\n' ↥ + ' lines'
 ```
 
 ---
@@ -333,21 +361,110 @@ T ∆ ⚡ ⦙ s ∆ ''
 ```
 
 ---
-#####
- - 
+##### last item of a string or an array `ꕉ` `↟`
+ - `ꕉ` is typed as `.la|TAB`.
+ - `↟` is typed as `.lx|TAB`.
+ - `ꕉ` is used to access the last item of an array or a string.
+ - `ꕉ` is compiled to `[x.length - 1]`, so `xꕉ` becomes `x[x.length - 1]`.
+ - `x↟` is compiled to `(x.length - 1)`.
 
 ```javascript
+A ∆ ['X','Y']
+➮ appendAndReturnIndex { A ⬊ a ⦙ $ A↟ }
+z ∆ appendAndReturnIndex('Z')
+ロ 'inserted', Aᶻ, 'at:', z
+```
+
+```javascript
+A ∆ ['hey', 'there', '.', '.', 'how', 'are', 'are', 'you', '.']
+➮ removeDoubles {
+	R ∆ []
+	i ⬌ a {
+		⌥ (aⁱ ≟ Rꕉ) ♻
+		R ⬊ (aⁱ)
+	}
+	$ R
+}
+ロ removeDoubles(A) ⫴ ' '
+// hey there . how are you .
+```
+
+---
+##### finding occurence in a string or array with `≀` `≀≀`
+ - `≀` is typed as `io|TAB`.
+ - `≀≀` is typed as `lio|TAB` or `io|TABio|TAB`.
+ - `≀` is replaced with `.indexOf`.
+ - `≀≀` is replaced with `.lastIndexOf`.
+ - `(` and `)` can be used or omited.
+
+```javascript
+s ∆ 'hello world!'
+ロ  s ≀ 'world', s ≀ ('o'), s ≀≀ 'o'
+// 6 4 7
+```
+
+---
+##### array utilities `⋃` `⨄` `ꔬ` `⧉` `ꗚ` `❄`, string and character utilities `△` `◬` `⩪`
+ - `⋃` is typed as `sl|TAB`.
+ - `⨄` is typed as `pl|TAB`.
+ - `ꔬ` is typed as `fi|TAB`.
+ - `⧉` is typed as `ma|TAB`.
+ - `ꗚ` is typed as `aa|TAB`.
+ - `❄` is typed as `so|TAB`.
+ - `⋃` is replaced with `.slice`.
+ - `⨄` is replaced with `.splice`.
+ - `ꔬ` is replaced with `.filter`.
+ - `⧉` is replaced with `.map`.
+ - `ꗚ` is replaced with `.concat`.
+ - `❄` is replaced with `.sort`.
+ - `◬` is typed as `cc|TAB`.
+ - `△` is typed as `ca|TAB`.
+ - `⩪` is typed as `su|TAB`.
+ - `◬` is replaced with `.charCodeAt`.
+ - `△` is replaced with `.charAt`.
+ - `⩪` is replaced with `.substr`.
+
+```javascript
+➮ numbersOnly { $ a ⌶ '' ꔬ (➮ { $ a◬(0) <= 57 }) }
+ロ numbersOnly('a1b2c4d8q11')
+```
+
+```javascript
+// same as above. but sorted
+➮ numbersOnly { $ a ⌶ '' ꔬ (➮ { $ a◬(0) <= 57 }) }
+ロ numbersOnly('a1b2c4d8q11')❄ (➮ { $a - b })
+```
+
+---
+##### symbolic variables
+ - there are three types of symbolic variables.
+ - the goal is to provide more condense, formula-like notation.
+ - `α` `γ` `β` ... `ζ` are *greek letters*.
+ - Javascript supports greek letters, no translation is needed.
+ - Typing in greek: alf=α bet=β gam=γ del=δ eps=ε zet=ζ eta=η tet=θ iot=ι kap=κ lam=λ muu=μ nuu=ν xii=ξ pii=π roo=ρ sig=σ tau=τ ups=υ fii=φ chi=χ psi=ψ ome=ω.
+ 
+```javascript
+∇ α = 10, δ = 5
+α += δ
+ロ 'alfa plus delta is:', α
+```
+
+ - `ⓐ` `ⓑ` `ⓒ` ... `ⓩ` are *encircled letters*. 
+ - encircled letters are typed `ooa|TAB`, `oob|TAB`, `ooz|TAB` etc.
+ - they are useful if you are out of latin letters.
+ - internally they are represented as `_oo_0` to `_oo_26`.
+
+```javascript
+∇ ⓐ = 0, ⓩ = 26
+ロ ⓐ, ⓩ
+```
+ - `❶` `❷` `①` `②` are `tags` or `labels`, they have special syntax.
+ - `❶` is a *label definition*, `❶ 5` equals to `;var var0 = 5`.
+ - `①` is a *label reference*, or usage, `ロ ①` will convert to `console.log(var0)`.
+
+```javascript
+❶ 'hello' ❷ 'world'
+ロ ①, ②
 ```
 
 
-
-
-
-
-
-
-
-
-
-
- 
