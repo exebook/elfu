@@ -16,6 +16,13 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 - Elfu is *mostly* reversable, in other words you can convert .yy->.js and .js->.yy. *Mostly*.
 
 [1]: http://exebook.github.io/fonts/elfu.ttf
+
+Here is how Elfu looks in author's editor:
+
+![screenshot](http://exebook.github.io/pics/elfu1.png)
+
+#Syntax
+
 ---
 #####function definition `➮`
 - typed as `fu|TAB`.
