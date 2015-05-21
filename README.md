@@ -18,11 +18,14 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 - you can avoid `(`, `)` and `,` in argument declaration.
 - if you omit any arguments, arguments `a` `b` `c` are default.
 - use `➮f(){}` syntax to declare a function without arguments.
+- `➮ {}` is a lambda with default arguments *a, b, c*.
 
 ```javascript
 ➮ compare (a, b) { console.log(a == b) }
 ➮ compare a b { console.log(a == b) }
 ➮ compare { console.log(a == b) }
+[1,2,3].forEach(➮ { console.log(a) })
+
 ```
 
 ---
@@ -106,7 +109,7 @@ x ∆ 100
 ```
 
 ---
-##### `.push`, `.pop`, `.shift`, `.unshift` - `⬊` `⬈` `⬋` `⬉`
+##### stack operations `⬊` `⬈` `⬋` `⬉`
  - `⬊` `⬈` are typed as `pu|TAB` and `po|TAB`.
  - `⬊` is for `.push` and `⬈` is for `.pop`.
  - you can omit `.`, `(` and `)`.
@@ -176,7 +179,7 @@ f.bind(⚪)()
 ```
 
 ---
-##### clean and visible semicolon '⦙'
+##### clean and visible semicolon `⦙`
  - since elfu code is so condensed, many expressions fit on the same line, to improve readability of such dense code, cleaner version of semicolon `⦙` was introduced.
  - typed as `sc|TAB`.
  - `⦙` and `;` both can be used.
@@ -276,7 +279,7 @@ spawn ∆ ≣ ('child_process').spawn
  - `⚡` gives you millisecond tick.
  - `⌛` is typed as `st|TAB`.
  - `⌚` is typed as `si|TAB`.
- - `⚡` is typed as `tt|TAB` **(mnemonic: time tick)**.
+ - `⚡` is typed as `tt|TAB` *(mnemonic: time tick)*.
  - `⌿⌛` is typed as `ct|TAB`.
  - `⌿⌚` is typed as `ci|TAB`.
 
