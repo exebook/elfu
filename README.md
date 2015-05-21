@@ -20,11 +20,12 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
  - [Screenshot][1]
  - [Syntax][2]
  - [Usage][3]
+ - [Dotcall syntax][4]
  
 [1]: https://github.com/exebook/elfu/blob/master/README.md#screenshot
 [2]: https://github.com/exebook/elfu/blob/master/README.md#syntax
 [3]: https://github.com/exebook/elfu/blob/master/README.md#usage
-[4]: https://github.com/exebook/elfu/blob/master/README.md#Dotcall syntax
+[4]: https://github.com/exebook/elfu/blob/master/README.md#dotcall-syntax
 
 #Screenshot
 Here is how Elfu looks in author's editor:
