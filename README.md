@@ -1,4 +1,4 @@
-#elfu
+#Elfu - hosti lammen
 
 Elfu is highly experimental symbolic language. UNICODE contains thousands and thousands of symbols, why not use them?
 
@@ -11,14 +11,23 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 - Most of symbols are just replaced with their Javascript counterparts.
 - Some symbols are parsed in a special way, like `➮` or `⬌`.
 - Editors known to be Elfu-friendly are Sublime Text, Geany, Deodar.
-- If your computer does not show all symbols, there is a font file *[elfu.ttf][1]*.
+- If your computer does not show all symbols, there is a font file *[elfu.ttf][100]*.
 - Elfu only uses Unicode standard symbols.
 - Elfu is *mostly* reversable, in other words you can convert .yy->.js and .js->.yy. *Mostly*.
+[100]: http://exebook.github.io/fonts/elfu.ttf
 
-[1]: http://exebook.github.io/fonts/elfu.ttf
+# Contents
+ - [Screenshot][1]
+ - [Syntax][2]
+ - [Usage][3]
+ 
+[1]: https://github.com/exebook/elfu/blob/master/README.md#screenshot
+[2]: https://github.com/exebook/elfu/blob/master/README.md#syntax
+[3]: https://github.com/exebook/elfu/blob/master/README.md#usage
 
+
+#Screenshot
 Here is how Elfu looks in author's editor:
-
 ![screenshot](http://exebook.github.io/pics/elfu1.png)
 
 #Syntax
@@ -475,4 +484,10 @@ s ∆ 'hello world!'
 ロ ①, ②
 ```
 
+#Usage
+ - install with **npm**, `[sudo] npm i -g elfu`.
+ - `yy <program>` run the `.yy` program.
+ - `yyj program.yy` convert `program.yy` to Javascript. Data is written to standart outout.
+ - `jyy program.js` convert Javascript to Elfu.
+ - `require('elfu'); require('example.yy')` you can require modules written in Elfu.
 
