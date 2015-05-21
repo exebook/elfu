@@ -29,6 +29,35 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 [4]: https://github.com/exebook/elfu/blob/master/README.md#dotcall-syntax
 [5]: https://github.com/exebook/elfu/blob/master/README.md#feedback
 
+[201]: https://github.com/exebook/elfu#function-definition-
+[202]: https://github.com/exebook/elfu#return-statement-
+[203]: https://github.com/exebook/elfu#while-and-for-statements--and-
+[204]: https://github.com/exebook/elfu#break-and-continue-statements-
+[205]: https://github.com/exebook/elfu#each-looping--and-
+[206]: https://github.com/exebook/elfu#consolelog-%E3%83%AD
+[207]: https://github.com/exebook/elfu#if-else-elseif---
+[208]: https://github.com/exebook/elfu#var-and-def--
+[209]: https://github.com/exebook/elfu#stack-operations----
+[210]: https://github.com/exebook/elfu#superscript-indexing-x%E2%81%B1
+[211]: https://github.com/exebook/elfu#this-and-undefined-are---
+[212]: https://github.com/exebook/elfu#comparison-operators--and-
+[213]: https://github.com/exebook/elfu#clean-and-visible-semicolon-
+[214]: https://github.com/exebook/elfu#delete-and-new-are--and-
+
+[215]: https://github.com/exebook/elfu#length-of-an-array-or-a-string-
+[216]: https://github.com/exebook/elfu#require-directive-
+[217]: https://github.com/exebook/elfu#math-functions---
+[218]: https://github.com/exebook/elfu#infinite-loop-
+[219]: https://github.com/exebook/elfu#time-operations---
+[220]: https://github.com/exebook/elfu#FSFSFS
+[221]: https://github.com/exebook/elfu#str-serialization-with---
+[222]: https://github.com/exebook/elfu#booleans--and-
+[223]: https://github.com/exebook/elfu#last-item-of-a-string-or-an-array-%EA%95%89-
+[224]: https://github.com/exebook/elfu#finding-occurence-in-a-string-or-array-with--
+[225]: https://github.com/exebook/elfu#array-utilities---%EA%94%AC--%EA%97%9A--string-and-character-utilities---
+[226]: https://github.com/exebook/elfu#symbolic-variables
+
+
 #Screenshot
 Here is how Elfu looks in author's editor:
 ![screenshot](http://exebook.github.io/pics/elfu1.png)
@@ -329,8 +358,8 @@ T ∆ ⚡ ⦙ s ∆ ''
 ロ 'benchmark: ', ⚡ - T, 'ms'
 ```
 
---- node.js `fs` functions `⛁`, `⛃`
-#####
+---
+##### node.js `fs` functions `⛁`, `⛃`
  - `⛁` is replaced with `fs.readFileSync`.
  - `⛃` is replaced with `fs.writeFileSync`.
  - `⛁` is typed `fsrs|TAB`.
