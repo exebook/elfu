@@ -58,8 +58,15 @@ function mainLoop(s) {
 			}
 			O = {type:'id', s:cut()}
 		} else if (isCharNum(ch)) {
-			var b = i
-			while (++b < e) if (!isCharNum(s[b])) break
+			var b = i, dot = false
+			while (++b < e) {
+				if (s[b] == '.') {
+					if (dot) break
+					dot = true
+					continue
+				}
+				if (!isCharNum(s[b])) break
+			}
 			O = {type:'num', s:cut()}
 		} else if (ch == '"' || ch == "'") {
 			b = i

@@ -15,7 +15,8 @@ function replaceCompilerVars(s, prefix) {
 //return
 /*
 TODO:
-
+ -------- lexer -------
+ bug: '⬠ 0.5' -- compiles as 'Math.round(0).5'
  -------- jyy -------
 L[L ↥ - 1] ꕉ
  -------- convert -----
@@ -31,9 +32,21 @@ other assignments:
 	a ?= b; if (b) a = b
 	a =< b, a => b  if(a<b)a=b
 ❄(➮{}) make as ❄➮{} or even ❄{}
+
+isolated spaces:
+❄{
+	s ∆ ''
+}
+;(function {
+	var s = ''
+})()
+
+
  ----- typing ------
  change la to .la (ꕉ), le to .le
 */
+
+
 module.exports.elfuConvert = elfuConvert
 module.exports.userSym = userSym
 function userSym(sym, id) {
@@ -111,8 +124,8 @@ function elfuConvert(s, fileName) {
 	simpleReplace(R, '⚪', 'this') // remove it, use autoDotAfter
 	simpleReplace(R, '⚫', 'this.')
 	simpleReplace(R, '⬤', 'typeof ')
-	simpleReplace(R, '⌿⌚', 'clearInterval')
-	simpleReplace(R, '⌿⌛', 'clearTimeout')
+	autoArg(R, '⌿⌚', 'clearInterval')
+	autoArg(R, '⌿⌛', 'clearTimeout')
 	simpleReplace(R, '⟡', 'new ')
 	simpleReplace(R, '⏀', 'delete ')
 
@@ -126,13 +139,13 @@ function elfuConvert(s, fileName) {
 	autoArg(R, '⬊', '.push')
 	simpleReplace(R, '⬈', '.pop()')
 	simpleReplace(R, '⬉', '.shift()')
-	simpleReplace(R, '⬋', '.unshift')
+	autoArg(R, '⬋', '.unshift')
 	simpleReplace(R, '⬍', '.forEach')
 	simpleReplace(R, '⦾', 'false')
 	simpleReplace(R, '⦿', 'true')
 	simpleReplace(R, '≠', '!=')
 	simpleReplace(R, '≟', '==')
-	simpleReplace(R, '≣', 'require')
+	autoArg(R, '≣', 'require')
 	simpleReplace(R, '⌚', 'setInterval')
 	simpleReplace(R, '⌛', 'setTimeout')
 	simpleReplace(R, '⎇', 'else ')
