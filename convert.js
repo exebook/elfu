@@ -20,6 +20,7 @@ TODO:
  -------- jyy -------
 L[L ↥ - 1] ꕉ
  -------- convert -----
+concat allow ꗚ[]
 add [-1] [-2] [-3]
 remove ⊜ (or change)
 if... {}
@@ -495,7 +496,10 @@ function findVar(A) {
 	for (var i = 1; i < A.length; i++) {
 		if (A[i].s == '∆') {
 			var q = prev(A, i)
-			A[q].s = 'var '+A[q].s
+			var brace = prev(A, q)
+			var s = 'var '+A[q].s
+			if (brace && A[brace].s != '(') s = ';' + s
+			A[q].s = s
 			A[i].s = ' = '
 		}
 	}

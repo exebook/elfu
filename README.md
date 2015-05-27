@@ -189,20 +189,22 @@ if (true) ロ 'here'
 ##### var and def ∇ ∆ 
  - typed as `va|TAB`, `de|TAB`.
  - `∇` is replaced with `var`.
- - `∆ x` is translated to `var x =`.
+ - `x ∆` is translated to `var x =`.
  - `∆` reads as *is defined as* or just *define*.
- - `∆` supposed to be *delta*, but in fact it is a simplified form of a math symbol `≜` -- *definition* or *is defined as*.
+ - `∆` used to be *delta*, but in fact it is a simplified form of a math symbol `≜` -- *definition* or *is defined as*.
  
 ```javascript
 x ∆ 100
 ⧗ (∇ i = 0; i < x; i++)
+a ∆ 1  b ∆ 'string'  c ∆ {}  d ∆ []
+
 ```
 
 ---
 ##### stack operations `⬊` `⬈` `⬋` `⬉`
  - `⬊` `⬈` are typed as `pu|TAB` and `po|TAB`.
  - `⬊` is for `.push` and `⬈` is for `.pop`.
- - you can omit `.`, `(` and `)`.
+ - you can omit `(` and `)`.
  - `⬋` `⬉` are typed as `Pu|TAB` and `Po|TAB`.
  - `⬋` is for `.shift` and `⬉` is for `.unshift`.
  - mnemonically `shift()` is `pop()` from the other side.
