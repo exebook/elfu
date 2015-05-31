@@ -50,8 +50,8 @@ isolated spaces:
 
 module.exports.elfuConvert = elfuConvert
 module.exports.userSym = userSym
-function userSym(sym, id) {
-	userReplace.push({ find:sym, repl:id })
+function userSym(sym, id, type) {
+	userReplace.push({ find:sym, repl:id, type:type })
 }
 
 
@@ -61,9 +61,16 @@ var userReplace = [
 	{ find:'☛', repl:'with' },
 	{ find:'ꗌ', repl:'JSON.stringify' },
 	{ find:'ꖇ', repl:'JSON.parse' },
-	{ find:'⛁', repl:'fs.readFileSync' },
+	{ find:'⛁', repl:'fs.readFileSync',  type: 'auto' },
 	{ find:'⛃', repl:'fs.writeFileSync' },
 	{ find:'⚡', repl:'(new Date().getTime())' },
+	{ find:'∼◬', repl:'String.fromCharCode', type:'auto'}, 
+	{ find:'ꘉ', repl:'bind', type: 'auto'},
+	{ find:'ꘉ', repl:'bind', type: 'auto'},
+	{ find:'↵', repl:'/\\n/g'},
+	{ find:'⁋', repl:'/\\r/g'},
+	{ find:'↵⁋', repl:'/\\n\\r/g'},
+	{ find:'ꘉ', repl:'bind', type: 'auto'},
 ]
 
 var ovar = 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ'
@@ -86,7 +93,10 @@ function elfuConvert(s, fileName) {
 	for (var i = 0; i < ix.length; i++) simpleReplace(R, ix[i], '['+re[i]+']')
 	{
 		for (var i = 0; i < a.length; i++)
-			simpleReplace(R, a[i].find, a[i].repl, 'id')
+			if (a[i].type == 'auto')
+				autoArg(R, a[i].find, a[i].repl, 'id')
+			else
+				simpleReplace(R, a[i].find, a[i].repl, 'id')
 		for (var i = 0; i < t.length; i++) {
 			var t1 = t[i], d1 = d[i]
 			simpleReplace(R, t1, ';var var'+ i +' = ')
@@ -99,32 +109,32 @@ function elfuConvert(s, fileName) {
 	findStrEqu(R, '≈', '=')
 	findStrEqu(R, '∼', '==')
 	findStrEqu(R, '≁', '!=')
-	simpleReplace(R, '⋃', '.slice')
-	simpleReplace(R, '⨄', '.splice')
+	autoArg(R, '⋃', '.slice')
+	autoArg(R, '⨄', '.splice')
 	simpleReplace(R, 'ꔬ', '.filter')
 	simpleReplace(R, '⧉', '.map')
-	simpleReplace(R, 'ꗚ', '.concat')
+	autoArg(R, 'ꗚ', '.concat')
 	simpleReplace(R, '❄', '.sort')
-	simpleReplace(R, '⩪', '.substr')
-	simpleReplace(R, '△', '.charAt')
-	simpleReplace(R, '◬', '.charCodeAt')
+	simpleReplace(R, '⩪', '.substr') // TODO: doubleArg
+	autoArg(R, '△', '.charAt')
+	autoArg(R, '◬', '.charCodeAt')
 	
 //TODO: autoparen for toString(XXX) and others
 	autoArg(R, '⌶', '.split')
 	autoArg(R, '⫴', '.join')
 	autoArg(R, '≂', '.toString')
 // 	simpleReplace(R, '≂', '.toString')
- 	autoArg(R, '≀', '.indexOf')
- 	autoArg(R, '≀≀', '.lastIndexOf')
- 	simpleReplace(R, '⦙', ';')
- 	simpleReplace(R, '★', 'parseInt')
+	autoArg(R, '≀', '.indexOf')
+	autoArg(R, '≀≀', '.lastIndexOf')
+	simpleReplace(R, '⦙', ';')
+	autoArg(R, '★', 'parseInt')
 	autoArg(R, '⬠', 'Math.round')
 	autoArg(R, '⍽', 'Math.floor')
 	simpleReplace(R, '♻', 'continue;')
 	simpleReplace(R, '⚂', 'Math.random()')
 	simpleReplace(R, '⚪', 'this') // remove it, use autoDotAfter
 	simpleReplace(R, '⚫', 'this.')
-	simpleReplace(R, '⬤', 'typeof ')
+	autoArg(R, '⬤', 'typeof ')
 	autoArg(R, '⌿⌚', 'clearInterval')
 	autoArg(R, '⌿⌛', 'clearTimeout')
 	simpleReplace(R, '⟡', 'new ')
@@ -147,7 +157,7 @@ function elfuConvert(s, fileName) {
 	simpleReplace(R, '≠', '!=')
 	simpleReplace(R, '≟', '==')
 	autoArg(R, '≣', 'require')
-	simpleReplace(R, '⌚', 'setInterval')
+	simpleReplace(R, '⌚', 'setInterval')// TODO: doubleArg similar to autoArg
 	simpleReplace(R, '⌛', 'setTimeout')
 	simpleReplace(R, '⎇', 'else ')
 	simpleReplace(R, '↥', '.length')
@@ -452,12 +462,26 @@ function findLast(A) {
 ➮ () {}
 ➮ {}
 ➮ (f) {}
+➮ a + b ; // BECOMES (➮ { $a+b }).bind(this)
 */
 function findColon(A, find, replace) {
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == find && ((i > 0 &&
 			(A[i-1].type != 'id' && A[i-1].type != 'str')) || i == 0)) {
 				A[i].s = replace+' '
+				var b = i 
+				while (true) {
+					b = next(A, b)
+					console.log(A[b])
+					if (A[b].s == '{') break
+					if (A[b].s == ';'||A[b].s == '|') {
+						console.log('case')
+						addTo(A[i], '(')
+						addTo(A[i+1], '(a,b,c){ return ')
+						A[b].s = '}).bind(this)'
+						return
+					}
+				}
 				i = next(A, i)
 				var ids = []
 				while (A[i].type == 'id') {

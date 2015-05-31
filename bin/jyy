@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 var elfu = require('elfu')
+var name = process.argv[2]
 if (name == '-v' || name == '--version') {
 	console.log(elfu.version)
 	return
 }
 var fs = require('fs')
 var js2yy = require('../js2yy.yy')
-var fin = process.argv[2]
-if (fin) {
-	var s = fs.readFileSync(fin).toString()
+if (name) {
+	var s = fs.readFileSync(name).toString()
 	s = js2yy.convert(s)
 	process.stdout.write(s)
 } else {

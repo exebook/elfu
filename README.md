@@ -49,7 +49,16 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
  - [Usage][3]
  - [Dotcall syntax][4]
  - [Feedback][5]
- 
+/*
+	TODO:
+	∼◬ String.fromCharCode() - auto arg
+	ꘉ bind - auto arg
+	- mini functions 
+	f = ➮ a + b ⦙
+	ロ f(2, 3)
+	
+*/ 
+
 [1]: https://github.com/exebook/elfu/blob/master/README.md#screenshot
 [2]: https://github.com/exebook/elfu/blob/master/README.md#syntax
 [3]: https://github.com/exebook/elfu/blob/master/README.md#usage

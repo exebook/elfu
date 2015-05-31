@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 var elfu = require('elfu')
+var name = process.argv[2]
 if (name == '-v' || name == '--version') {
 	console.log(elfu.version)
 	return
 }
 
 var fs = require('fs')
-var fin = process.argv[2]
-if (fin) {
-	var s = fs.readFileSync(fin).toString()
-	s = elfu.convert(s, fin)
+if (name) {
+	var s = fs.readFileSync(name).toString()
+	s = elfu.convert(s, name)
 	process.stdout.write(s)
 } else {
 	console.log('node yyj <in>')
