@@ -12,9 +12,7 @@ loadFile = function(module, filename) {
 		s = s.substr(i)
 	}
 	var t = filename
-//	console.time(t)
-	var yy = convertor.elfuConvert(s, filename)
-//	console.timeEnd(t)
+	var yy = convertor.elfuConvert('module.paths.push(".");'+s, filename)
 	var R = module._compile(yy, filename)
 	return R
 }
@@ -33,3 +31,4 @@ module.exports.handleExt = function(ext) {
 	   require.extensions[ext] = loadFile
 	}
 }
+

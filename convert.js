@@ -109,34 +109,16 @@ function elfuConvert(s, fileName) {
 	findStrEqu(R, '≈', '=')
 	findStrEqu(R, '∼', '==')
 	findStrEqu(R, '≁', '!=')
-	autoArg(R, '⋃', '.slice')
-	autoArg(R, '⨄', '.splice')
 	simpleReplace(R, 'ꔬ', '.filter')
 	simpleReplace(R, '⧉', '.map')
-	autoArg(R, 'ꗚ', '.concat')
 	simpleReplace(R, '❄', '.sort')
 	simpleReplace(R, '⩪', '.substr') // TODO: doubleArg
-	autoArg(R, '△', '.charAt')
-	autoArg(R, '◬', '.charCodeAt')
-	
-//TODO: autoparen for toString(XXX) and others
-	autoArg(R, '⌶', '.split')
-	autoArg(R, '⫴', '.join')
-	autoArg(R, '≂', '.toString')
 // 	simpleReplace(R, '≂', '.toString')
-	autoArg(R, '≀', '.indexOf')
-	autoArg(R, '≀≀', '.lastIndexOf')
 	simpleReplace(R, '⦙', ';')
-	autoArg(R, '★', 'parseInt')
-	autoArg(R, '⬠', 'Math.round')
-	autoArg(R, '⍽', 'Math.floor')
 	simpleReplace(R, '♻', 'continue;')
 	simpleReplace(R, '⚂', 'Math.random()')
 	simpleReplace(R, '⚪', 'this') // remove it, use autoDotAfter
 	simpleReplace(R, '⚫', 'this.')
-	autoArg(R, '⬤', 'typeof ')
-	autoArg(R, '⌿⌚', 'clearInterval')
-	autoArg(R, '⌿⌛', 'clearTimeout')
 	simpleReplace(R, '⟡', 'new ')
 	simpleReplace(R, '⏀', 'delete ')
 
@@ -147,16 +129,13 @@ function elfuConvert(s, fileName) {
 	simpleReplace(R, '⧗', 'for')
 	simpleReplace(R, '⧖', 'while')
 	simpleReplace(R, '∞', 'while(true)')
-	autoArg(R, '⬊', '.push')
 	simpleReplace(R, '⬈', '.pop()')
 	simpleReplace(R, '⬉', '.shift()')
-	autoArg(R, '⬋', '.unshift')
 	simpleReplace(R, '⬍', '.forEach')
 	simpleReplace(R, '⦾', 'false')
 	simpleReplace(R, '⦿', 'true')
 	simpleReplace(R, '≠', '!=')
 	simpleReplace(R, '≟', '==')
-	autoArg(R, '≣', 'require')
 	simpleReplace(R, '⌚', 'setInterval')// TODO: doubleArg similar to autoArg
 	simpleReplace(R, '⌛', 'setTimeout')
 	simpleReplace(R, '⎇', 'else ')
@@ -167,6 +146,25 @@ function elfuConvert(s, fileName) {
 	simpleReplace(R, '∇', 'var ')
 	simpleReplace(R, '$', 'return ')
 	simpleReplace(R, '@', 'break')
+	autoArg(R, 'ꗚ', '.concat')
+	autoArg(R, '△', '.charAt')
+	autoArg(R, '◬', '.charCodeAt')
+	autoArg(R, '⌶', '.split')
+	autoArg(R, '⫴', '.join')
+	autoArg(R, '≂', '.toString')
+	autoArg(R, '≀', '.indexOf')
+	autoArg(R, '≀≀', '.lastIndexOf')
+	autoArg(R, '⋃', '.slice')
+	autoArg(R, '⨄', '.splice')
+	autoArg(R, '★', 'parseInt')
+	autoArg(R, '⬠', 'Math.round')
+	autoArg(R, '⍽', 'Math.floor')
+	autoArg(R, '⬤', 'typeof ')
+	autoArg(R, '⌿⌚', 'clearInterval')
+	autoArg(R, '⌿⌛', 'clearTimeout')
+	autoArg(R, '⬊', '.push')
+	autoArg(R, '⬋', '.unshift')
+	autoArg(R, '≣', 'require')
 	findLast(R)
 	findColon(R, '➮', 'function')
 	var t = joinAdd(R)
@@ -240,32 +238,6 @@ function handleEach1(A, i) {
 }
 
 function lastOf(obj) { return obj[obj.length - 1] }
-
-function getNameRight(A, i) {
-	var e = A.length, fun = 0, arr = 0, R = []
-	while (i < e) {
-		var c = A[i]
-		var none = false
-		if (fun > 0) {
-			if (c.s == ')') fun--; else if (c.s == '(') fun++
-		}
-		else if (arr > 0) {
-			if (c.s == ']') arr--; else if (c.s == '[') arr++
-		}
-		else if (c.s == '(') fun++
-		else if (c.s == '[') arr++
-		else if (c.s == '.') ;
-		else if (c.type == 'id') {
-			if (lastOf(R) && lastOf(R).type == 'id') break
-		}
-		else if (c.type == 'space') ;
-		else none = true
-		if (!none && c.type != 'space' && c.type != 'line') R.push(c)
-		if (none) break
-		i++
-	}
-	return [R, i]
-}
 
 function handleCall(A, i) {
 	var name = getNameLeft(A, i - 1)
@@ -472,9 +444,8 @@ function findColon(A, find, replace) {
 				var b = i 
 				while (true) {
 					b = next(A, b)
-					console.log(A[b])
 					if (A[b].s == '{') break
-					if (A[b].s == ';'||A[b].s == '|') {
+					if (A[b].s == ';'||A[b].s == '⦙') {
 						console.log('case')
 						addTo(A[i], '(')
 						addTo(A[i+1], '(a,b,c){ return ')
@@ -562,6 +533,32 @@ function findMacros(A) {
 //	}
 //}
 
+function getNameRight(A, i) {
+	var e = A.length, fun = 0, arr = 0, R = [], firstToken = true
+	while (i < e) {
+		var c = A[i]
+		var none = false
+		if (fun > 0) {
+			if (c.s == ')') fun--; else if (c.s == '(') fun++
+		}
+		else if (arr > 0) {
+			if (c.s == ']') arr--; else if (c.s == '[') arr++
+		}
+		else if (c.s == '(') fun++
+		else if (c.s == '[') arr++
+		else if (c.s == '.') ;
+		else if (c.type == 'id'||c.s == 'this.'|| (firstToken && c.type == 'str')) {
+			firstToken = false
+			if (lastOf(R) && lastOf(R).type == 'id') break
+		}
+		else if (c.type == 'space') ;
+		else none = true
+		if (!none && c.type != 'space' && c.type != 'line') R.push(c)
+		if (none) break
+		i++
+	}
+	return [R, i]
+}
 function autoArg(A, find, repl0) {
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == find) {
@@ -569,11 +566,11 @@ function autoArg(A, find, repl0) {
 			var a = next(A, i)
 			if (a) {
 			//TODO: ⦙ []❄(➮ { $ (⬠⚂ - 0.5) } )  // sym-nexts are not detected
-				if (A[a].type == 'id') {
+				if (A[a].type == 'id' || A[a].type == 'str' || A[a].s == 'this.') {
 					var R = getNameRight(A, a)
 					A[a].s = '(' + A[a].s
 					A[R[1]-1].s += ')'
-				} else if (A[a].type == 'str' || A[a].type == 'num') {
+				} else if (A[a].type == 'num') {
 					A[a].s = '(' + A[a].s + ')'
 				} else if (A[a].s != '(') {
 					repl += '()'
