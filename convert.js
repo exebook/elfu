@@ -19,6 +19,8 @@ TODO:
  bug: '⬠ 0.5' -- compiles as 'Math.round(0).5'
  -------- jyy -------
 L[L ↥ - 1] ꕉ
+	bug: ⌥ (⬤ tail ≟ 'string') flowꕉ += t
+	converts to: if (typeof  (tail )== 'string') flow[(typeof  (tail )== 'string') flow.length
  -------- convert -----
 concat allow ꗚ[]
 add [-1] [-2] [-3]

@@ -7,6 +7,8 @@ exports.convert = ➮ (R) {
 	findEach(R)
 	findIndex(R)
 //todo: remove () if empty
+// TODO sfcc -> ∼◬
+// D⌶('\r\n') -> D⌶'\r\n' // detect autoargs when possible
 	longReplace(R, '⌶', ['.','split'])
 	longReplace(R, '⫴', ['.','join'])
 	longReplace(R, '⋃', ['.','slice'])
