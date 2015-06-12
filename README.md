@@ -95,7 +95,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 
 #Screenshot
 Here is how Elfu looks in author's editor:
-![screenshot](http://exebook.github.io/pics/elfu2.png)
+![screenshot](http://exebook.github.io/pics/elfu1.png)
 
 #Syntax
 
