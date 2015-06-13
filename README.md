@@ -51,6 +51,8 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
  - [Usage][3]
  - [Dotcall syntax][4]
  - [Feedback][5]
+
+
 /*
 	TODO:
 	∼◬ String.fromCharCode() - auto arg
