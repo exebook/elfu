@@ -1,3 +1,5 @@
+![screenshot](http://exebook.github.io/pics/hosti_lammen.png)
+
 #Elfu - hosti lammen
 
 Elfu is highly experimental symbolic language. UNICODE contains thousands and thousands of symbols, why not use them?
