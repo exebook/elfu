@@ -406,8 +406,12 @@ T ∆ ⚡ ⦙ s ∆ ''
  - `⛃` is replaced with `fs.writeFileSync`.
  - `⛁` is typed `fsrs|TAB`.
  - `⛃` is typed `fsws|TAB`.
+ - you can omit `(` and `)` for  ⛁ with a single argument.
 
 ```javascript
+fs ∆ ≣ 'fs'
+A ∆ ⛁'readme.txt' ≂ ⌶ '\n'
+ロ A ↥, 'lines loaded'
 ```
 
 ---
