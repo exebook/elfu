@@ -22,6 +22,7 @@ i ⬌ A { // sublime
 
 
 //ロ R ⫴ ('\n')
+
 ⛃ (process.env.HOME+ '/.config/sublime-text-3/Packages/Elfu.sublime-completions', '{\t"scope": "source.js - variable.other.js",'
 + '\t"completions":'
 + '\t'

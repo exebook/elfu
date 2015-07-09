@@ -52,14 +52,11 @@ isolated spaces:
 
 module.exports.elfuConvert = elfuConvert
 module.exports.userSym = userSym
-function userSym(sym, id, type) {
-	userReplace.push({ find:sym, repl:id, type:type })
-}
-
 
 var PREFIX = 'DOTCALL', callNumber = 1, lex = require('./lexer.js')
 
 var userReplace = [
+	{ find:'⚑', repl:'process.exit()' },
 	{ find:'☛', repl:'with' },
 	{ find:'ꗌ', repl:'JSON.stringify' },
 	{ find:'ꖇ', repl:'JSON.parse' },
@@ -67,13 +64,20 @@ var userReplace = [
 	{ find:'⛃', repl:'fs.writeFileSync' },
 	{ find:'⚡', repl:'(new Date().getTime())' },
 	{ find:'∼◬', repl:'String.fromCharCode', type:'auto'}, 
-	{ find:'ꘉ', repl:'bind', type: 'auto'},
-	{ find:'ꘉ', repl:'bind', type: 'auto'},
+	{ find:'ꘉ', repl:'.bind', type: 'auto'},
+	{ find:'ꘉ', repl:'.bind', type: 'auto'},
+	{ find:'√', repl:'Math.sqrt', type: 'auto'},
 	{ find:'↵', repl:'/\\n/g'},
 	{ find:'⁋', repl:'/\\r/g'},
 	{ find:'↵⁋', repl:'/\\n\\r/g'},
 	{ find:'ꘉ', repl:'bind', type: 'auto'},
 ]
+
+function userSym(sym, id, type) {
+//	console.log('Add User Symbol:', sym, id, type, userReplace.length)
+	userReplace.push({ find:sym, repl:id, type:type })
+}
+module.exports.userReplace = userReplace
 
 var ovar = 'ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ'
 for (var i = 0; i < ovar.length; i++) userSym(ovar[i], '_oo_'+i)
@@ -106,6 +110,7 @@ function elfuConvert(s, fileName) {
 		}
 	}
 	findVar(R)
+	autoArg(R, 'ロロ', 'process.stdout.write')
 	findLog(R, 'ロ')
 //	findLog(R, '#')
 	findStrEqu(R, '≈', '=')

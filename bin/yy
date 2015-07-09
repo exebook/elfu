@@ -19,5 +19,6 @@ module.paths.push(process.cwd())
 
 if (name[0] == '.') name = process.cwd() + '/' + name
 
+elfu.require(__dirname.split('/').slice(0, -1).join('/') + '/rtl.yy')
 elfu.require(name)
 
