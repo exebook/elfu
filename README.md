@@ -48,6 +48,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
   - [finding occurence in a string or array with `≀` `≀≀`][224]
   - [array utilities `⋃` `⨄` `ꔬ` `⧉` `ꗚ` `❄`, string and character utilities `△` `◬` `⩪`][225]
   - [symbolic variables][226]
+  - [is defined `⟑`][227]
  - [Usage][3]
  - [Dotcall syntax][4]
  - [Feedback][5]
@@ -95,6 +96,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 [224]: https://github.com/exebook/elfu#finding-occurence-in-a-string-or-array-with--
 [225]: https://github.com/exebook/elfu#array-utilities---%EA%94%AC--%EA%97%9A--string-and-character-utilities---
 [226]: https://github.com/exebook/elfu#symbolic-variables
+[227]: https://github.com/exebook/elfu#is-defined
 
 
 #Screenshot
@@ -560,6 +562,16 @@ s ∆ 'hello world!'
 ```javascript
 ❶ 'hello' ❷ 'world'
 ロ ①, ②
+```
+
+---
+##### is defined
+ - `⟑` is typed as `id|TAB`.
+ - `⟑ <expr>` is replaced with `(typeof <expr> != undefined)`.
+
+```javascript
+s ∆ {x:123}
+⌥ (⟑s.x) ロ 's.x is not undefined'
 ```
 
 #Usage

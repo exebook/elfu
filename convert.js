@@ -65,12 +65,12 @@ var userReplace = [
 	{ find:'⚡', repl:'(new Date().getTime())' },
 	{ find:'∼◬', repl:'String.fromCharCode', type:'auto'}, 
 	{ find:'ꘉ', repl:'.bind', type: 'auto'},
-	{ find:'ꘉ', repl:'.bind', type: 'auto'},
 	{ find:'√', repl:'Math.sqrt', type: 'auto'},
 	{ find:'↵', repl:'/\\n/g'},
 	{ find:'⁋', repl:'/\\r/g'},
 	{ find:'↵⁋', repl:'/\\n\\r/g'},
 	{ find:'ꘉ', repl:'bind', type: 'auto'},
+	{ find:'**', repl:'arguments.callee.'}, // ** is temporary, find a better char
 ]
 
 function userSym(sym, id, type) {
@@ -172,6 +172,7 @@ function elfuConvert(s, fileName) {
 	autoArg(R, '⬊', '.push')
 	autoArg(R, '⬋', '.unshift')
 	autoArg(R, '≣', 'require')
+	findIsUndefined(R)
 	findLast(R)
 	findColon(R, '➮', 'function')
 	var t = joinAdd(R)
@@ -179,7 +180,87 @@ function elfuConvert(s, fileName) {
 	findMacros(R)
 	findEachs(R, handleEach)
 	findDotCalls(R, handleCall)
-	return lex.join(R,false)
+	findSettings(R)
+	return lex.join(R, false)
+}
+
+function loc(n) {
+	if (n != undefined) return arguments.callee.caller[n]
+	return arguments.callee.caller
+}
+
+//TODO: replace with loc()
+var setFuncs = {}
+
+namespace = {}
+
+function xeval (s) {
+	return eval(s)
+}
+
+function findSettings (A) {
+	var i = next(A, -1)
+	while (i >= 0) {
+		if (A[i].s == '⚙') {
+			var n = next(A, i+1)
+			if (A[n].s == '{') {
+				// direct code exec
+				var e = getEnd(A, n + 1)
+				var s = lex.join(A.slice(n+1, e))
+				xeval(s)
+			} else {
+				var max = 5
+				var x = n
+				var args = []
+				while (true) { // parse args
+					if (max-- <0) break
+					var x = next(A, x)
+					if (!x) {
+						break
+					}
+					if (A[x].type == 'id'||A[x].type == 'str') {
+						var ar = A[x].s
+						if (A[x].type == 'str') ar = xeval(ar)//unescape etc
+						args.push(ar)
+					} else if (A[x].type == 'num'||A[x].type == 'hexnum') {
+						var ar = A[x].s
+						args.push(parseInt(ar, A[x].type == 'num'?10:16))
+					} else if (A[x].type == 'line') {
+						var e = x-1
+						break;
+					} else if (A[x].s == '(') {
+						var e = getNameRight(A, x-1)
+						var src = lex.join(e[0])
+						args.push(xeval(src))
+						e = e[1]
+						x = e-1
+					} else if (A[x].s == '{') {
+						var e = getEnd(A, x + 1)
+						var body = lex.join(A.slice(x+1, e))
+						args.push(body)
+						break
+					} else if (A[x].type == 'sym') {
+						args.push(A[x].s)
+					} else break;
+				}
+				var fn = A[n].s
+				if (global[fn]) global[fn].apply(this, args)
+				else console.log('function undefined:', fn)
+			}
+			while (i <= e) {
+				if (!A[i]) break
+				A[i].type = 'space'
+				A[i].s = ''
+				i++
+			}
+			var i2 = i
+			while (A[i2] && A[i2].type == 'line') {
+				A[i2].s = ''
+				i2++
+			}
+		}		
+		i = next(A, i)
+	}
 }
 
 function trimStr(str) {
@@ -434,6 +515,17 @@ function findLast(A) {
 			A[i].s = '['+s+'.length - 1]'
 		}
 	}
+}
+
+function findIsUndefined (A) {
+	for (var i = 1; i < A.length - 1; i++) {
+		if (A[i].s == '⟑') {
+			var R = getNameRight(A, i + 1)
+			A[i].s = '(typeof '
+			A[R[1]-1].s += ' != "undefined")'
+		}
+	}
+
 }
 /*
 ➮ a (f) {}

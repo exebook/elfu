@@ -13,7 +13,14 @@ function isCharAlpha(c) {
 	  || (c >= 'А' && c <= 'Я') || (c >= 'а' && c <= 'я')
 }
 
-elfuLexerSyms = '` ᗰ ᙏ ᗲ ᗶ ᗼ ᙢ ᙕ ᙨ ᙜ ᘻ ❶ ❷ ❸ ❹ ❺ ❻ ❼ ❽ ❾ ❿ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ᵃ ᵇ ᶜ ᵈ ᵉ ᶠ ᵍ ʰ ⁱ ʲ ᵏ ˡ ᵐ ⁿ ᵒ ᵖ ʱ ʳ ˢ ᵗ ᵘ ᵛ ʷ ˣ ʸ ᶻ ∆ ↟ ꕉ ⌶ ⫴ ⋃ ⨄ ꔬ ⧉ ꗚ ❄ ⩪ △ ◬ ⟡ ⌑ ≞ ≂ ≈ ≀≀ ≀ ≁ ∼ ≃ ≄ ⦙ ⍽ ★ ⬠ ⚂ ♻ ★ ⏀ ⌿⌚ ⌿⌛ ⚪ ⚫ ⬤ ⋀ ⋁ ↥ ⎇ ⌚ ⌛ ≣ ≠ ≟ ⦾ ⦿ ⬌ ⬊ ⬈ ⬉ ⬋ ⬍ ∞ ⧖ ∅ ⧗ ⌥ ⥹ ⊜ ⨃ ∇ ➮ ꗝ √ ⚑ ロ ロロ # $ @ : :: ( ) [ ] { } .( , ; . - + * / % ~ | ++ -- != || && == === >= <= += -= *= /= %= >> << >>= <<= >>> <<< >>>= <<<= ?' // ∿ sine?
+function isCharHex(c) {
+	if (isCharNum(c)) return true
+	if (c >= 'a' && c <= 'f') return true
+	if (c >= 'A' && c <= 'F') return true
+	return false
+}
+
+elfuLexerSyms = '` ᗰ ᙏ ᗲ ᗶ ᗼ ᙢ ᙕ ᙨ ᙜ ᘻ ❶ ❷ ❸ ❹ ❺ ❻ ❼ ❽ ❾ ❿ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ᵃ ᵇ ᶜ ᵈ ᵉ ᶠ ᵍ ʰ ⁱ ʲ ᵏ ˡ ᵐ ⁿ ᵒ ᵖ ʱ ʳ ˢ ᵗ ᵘ ᵛ ʷ ˣ ʸ ᶻ ∆ ↟ ꕉ ⌶ ⫴ ⋃ ⨄ ꔬ ⧉ ꗚ ❄ ⩪ △ ◬ ⟡ ⌑ ≞ ≂ ≈ ≀≀ ≀ ≁ ∼ ≃ ≄ ⦙ ⍽ ★ ⬠ ⚂ ♻ ★ ⏀ ⌿⌚ ⌿⌛ ⚪ ⚫ ⬤ ⋀ ⋁ ↥ ⎇ ⌚ ⌛ ≣ ≠ ≟ ⦾ ⦿ ⬌ ⬊ ⬈ ⬉ ⬋ ⬍ ∞ ⧖ ∅ ⧗ ⌥ ⥹ ⊜ ⨃ ∇ ➮ ꗝ √ ⚑ ⟑ ⚙ ロ ロロ # $ @ : :: ( ) [ ] { } .( , ; . - + * / % ~ | ++ -- != || && == === >= <= += -= *= /= %= >> << >>= <<= >>> <<< >>>= <<<= ?' // ∿ sine?
 
 function buildSymLookupTree() {
 	var syms = elfuLexerSyms
@@ -57,6 +64,12 @@ function mainLoop(s) {
 				break
 			}
 			O = {type:'id', s:cut()}
+		} else if (ch == '0' && s[i+1] == 'x') {
+			var b = i+1, dot = false
+			while (++b < e) {
+				if (!isCharHex(s[b])) break
+			}
+			O = {type:'hexnum', s:cut()}
 		} else if (isCharNum(ch)) {
 			var b = i, dot = false
 			while (++b < e) {
@@ -68,6 +81,14 @@ function mainLoop(s) {
 				if (!isCharNum(s[b])) break
 			}
 			O = {type:'num', s:cut()}
+		} else if (s.substr(i, 4) == "'''\n") {
+			b = s.indexOf("\n'''\n", i + 4)
+			var longs = s.slice(i + 4, b)
+				.split('\\').join('\\\\')
+				.split('\n').join('\\n')
+				.split('"').join('\\"')
+			i = b + 4
+			O = {type:'str', s:'"'+longs+'"'}
 		} else if (ch == '"' || ch == "'") {
 			b = i
 			while (true) {
@@ -115,8 +136,8 @@ function mainLoop(s) {
 	function cut() { var R = s.substr(i, b-i); i=b; return R }
 }
 
-function join(A, x) {
+function join(A, opt) {
 	var R = []
-	for (var i = 0; i < A.length; i++) R.push(x == 'untab'?A[i].s.replace('\t', '   '):A[i].s)
+	for (var i = 0; i < A.length; i++) R.push(opt == 'untab'?A[i].s.replace('\t', '   '):A[i].s)
 	return R.join('')
 }
