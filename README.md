@@ -584,7 +584,9 @@ console.log('''\t
    Hello, multi line
    strings world
 ''')
-'''adasd'''
+'''
+adasd
+'''
 ```
 
 #Usage
