@@ -577,12 +577,12 @@ s ∆ {x:123}
 
 ##### multi line strings
 
-Elfu supports multi line strings enclosed with `'''\n` and `\n'''`.
+Elfu supports multi line strings enclosed with opening `'''\n` and closing `'''`.
 
 ```javascript
 console.log('''
-	Hello, multi line
-	strings world
+   Hello, multi line
+   strings world
 ''')
 ```
 
