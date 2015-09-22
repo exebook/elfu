@@ -580,10 +580,11 @@ s ∆ {x:123}
 Elfu supports multi line strings enclosed with opening `'''\n` and closing `'''`.
 
 ```javascript
-console.log('''
+console.log('''\t
    Hello, multi line
    strings world
 ''')
+'''adasd'''
 ```
 
 #Usage
