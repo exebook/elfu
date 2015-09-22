@@ -11,6 +11,30 @@ function replaceCompilerVars(s, prefix) {
 	return s.join('ロ')
 }
 
+function processIncludes(s, fileName) {
+	var R = []
+	s = replaceCompilerVars(s, fileName)
+	s = s.split('\n')
+	for (var i = 0; i < s.length; i++) {
+		if (s[i].indexOf('include ') == 0) {
+			var name = s[i].substr(8)
+			if (name.indexOf('.') < 0) name += '.yy'
+			//name = __dirname + '/' + name
+			if (!require('fs').existsSync(name)) {
+				console.log('Elfu unable to include', name)
+				process.exit(1)
+			}
+			var included = require('fs').readFileSync(name).toString()
+			included = replaceCompilerVars(included, name)
+			R = R.concat(included)
+		}
+		else
+			R.push(s[i])
+	}
+//	console.log('=================\n',R.join('\n'), '\n========')
+	return R.join('\n')
+}
+
 //console.log( replaceCompilerVars('ロ` abc\n\n\n a=5; ロ`xyz', 'inline'))
 //return
 /*
@@ -56,7 +80,7 @@ module.exports.userSym = userSym
 var PREFIX = 'DOTCALL', callNumber = 1, lex = require('./lexer.js')
 
 var userReplace = [
-	{ find:'⚑', repl:'process.exit()' },
+	{ find:'⚑', repl:'process.exit(1)' },
 	{ find:'☛', repl:'with' },
 	{ find:'ꗌ', repl:'JSON.stringify' },
 	{ find:'ꖇ', repl:'JSON.parse' },
@@ -70,6 +94,7 @@ var userReplace = [
 	{ find:'⁋', repl:'/\\r/g'},
 	{ find:'↵⁋', repl:'/\\n\\r/g'},
 	{ find:'ꘉ', repl:'bind', type: 'auto'},
+	{ find:'__argarr', repl:'Array.prototype.slice.apply(arguments)'},
 	{ find:'**', repl:'arguments.callee.'}, // ** is temporary, find a better char
 ]
 
@@ -87,8 +112,7 @@ function getId() {
 }
 
 function elfuConvert(s, fileName) {
-//console.log(s)
-	s = replaceCompilerVars(s, fileName)
+	s = processIncludes(s, fileName)
 	var a = userReplace
 	for (var i = 0; i < a.length; i++)
 		elfuLexerSyms += ' ' + a[i].find
@@ -110,8 +134,9 @@ function elfuConvert(s, fileName) {
 		}
 	}
 	findVar(R)
-	autoArg(R, 'ロロ', 'process.stdout.write')
+//	autoArg(R, 'ロロ', 'process.stdout.write')
 	findLog(R, 'ロ')
+	findStdoutWrite(R, 'ロロ')
 //	findLog(R, '#')
 	findStrEqu(R, '≈', '=')
 	findStrEqu(R, '∼', '==')
@@ -478,6 +503,17 @@ function findLog(A, find) {
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == find) {
 			A[i].s = 'console.log('
+			while (A[i] && A[i].type != 'line' && A[i].s != ';' && A[i].s != '⦙') i++
+			if (!A[i]) A[i] = {type:'repl',s:')'}
+			else addTo(A[i], ')')
+		}
+	}
+}
+
+function findStdoutWrite(A, find) {
+	for (var i = 0; i < A.length; i++) {
+		if (A[i].s == find) {
+			A[i].s = 'process_stdout_write_multi('
 			while (A[i] && A[i].type != 'line' && A[i].s != ';' && A[i].s != '⦙') i++
 			if (!A[i]) A[i] = {type:'repl',s:')'}
 			else addTo(A[i], ')')

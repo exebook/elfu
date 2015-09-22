@@ -1,5 +1,8 @@
 fs = ≣ 'fs'
 
+color = function(c) { return '\u001b[3'+c+'m'}
+colorEnd = function() { return '\u001b(B\u001b[m'}
+
 timeLimit = ➮ timeLimit {
 	⌥ (arguments.callee.t ≟ ∅) {
 		arguments.callee.t = ⚡
@@ -29,3 +32,23 @@ repl = ➮ repl s a b {
 	R += s⋃x
 	$ R
 }
+
+sysexe = ➮ sysexe cmd arg f {
+	⌥ (⬤arg.map ≠ 'function') {
+		ロ 'arguments must be []'
+		⚑
+	}
+	L ∆ ''
+	spawn ∆ ≣('child_process').spawn
+	x ∆ spawn(cmd, arg)
+	➮ d { L += a≂ }
+	x.stdout.on('data', d) 
+	x.stderr.on('data', d)
+	x.on('close', ➮{ f(L ⌶ '\n', a) })
+}
+
+process_stdout_write_multi = ➮ {
+	a ∆ Array.prototype.join.apply(arguments, [' '])
+	process.stdout.write(a)
+}
+

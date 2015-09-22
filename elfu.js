@@ -3,7 +3,7 @@ module.exports.version = '0.0.12'
 var fs = require('fs')
 var convertor = require('./convert')
 
-loadFile = function(module, filename) {
+loadFile = function loadFile(module, filename) {
 	var raw, s
 	raw = fs.readFileSync(filename, 'utf8')
 	s = raw.charCodeAt(0) === 0xFEFF ? raw.substring(1) : raw
@@ -21,12 +21,12 @@ if (require.extensions) {
    require.extensions['.yy'] = loadFile
    require.extensions['.dc'] = loadFile
 }
-module.exports.require = function(f) {
+module.exports.require = function elfuRequire(f) {
 	loadFile(module, f)
 }
 module.exports.convert = convertor.elfuConvert
 module.exports.userSym = convertor.userSym
-module.exports.handleExt = function(ext) {
+module.exports.handleExt = function handleExt(ext) {
 	if (require.extensions) {
 	   require.extensions[ext] = loadFile
 	}

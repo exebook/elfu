@@ -49,6 +49,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
   - [array utilities `⋃` `⨄` `ꔬ` `⧉` `ꗚ` `❄`, string and character utilities `△` `◬` `⩪`][225]
   - [symbolic variables][226]
   - [is defined `⟑`][227]
+  - [multi line strings with `'''`][228]
  - [Usage][3]
  - [Dotcall syntax][4]
  - [Feedback][5]
@@ -97,7 +98,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 [225]: https://github.com/exebook/elfu#array-utilities---%EA%94%AC--%EA%97%9A--string-and-character-utilities---
 [226]: https://github.com/exebook/elfu#symbolic-variables
 [227]: https://github.com/exebook/elfu#is-defined
-
+[228]: https://github.com/exebook/elfu#multi-line-strings
 
 #Screenshot
 Here is how Elfu looks in author's editor:
@@ -572,6 +573,17 @@ s ∆ 'hello world!'
 ```javascript
 s ∆ {x:123}
 ⌥ (⟑s.x) ロ 's.x is not undefined'
+```
+
+##### multi line strings
+
+Elfu supports multi line strings enclosed with `'''\n` and `\n'''`.
+
+```javascript
+console.log('''
+	Hello, multi line
+	strings world
+''')
 ```
 
 #Usage

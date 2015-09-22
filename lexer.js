@@ -82,15 +82,15 @@ function mainLoop(s) {
 			}
 			O = {type:'num', s:cut()}
 		} else if (s.substr(i, 4) == "'''\n") {
-			b = s.indexOf("\n'''", i + 4)
-			console.log('b=', b)
+			b = s.indexOf("'''", i + 4)
+//			b = s.indexOf("\n'''", i + 4)
 			if (b < 0) return [{type:"error, unterminated long string: '''"}]
 			else {
 				var longs = s.slice(i + 4, b)
 					.split('\\').join('\\\\')
 					.split('\n').join('\\n')
 					.split('"').join('\\"')
-				i = b + 4
+				i = b + 3//4
 				O = {type:'str', s:'"'+longs+'"'}
 			}
 		} else if (ch == '"' || ch == "'") {
