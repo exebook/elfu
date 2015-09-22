@@ -584,10 +584,13 @@ console.log('''\t
    Hello, multi line
    strings world
 ''')
-'''
-adasd
-'''
+
+str ∆ '''\t
+   Hello, multi line
+   strings world'''
+   
 ```
+(GitHub markdown does highlight with red background for some reason.)
 
 #Usage
  - install with **npm**, `[sudo] npm i -g elfu`.
