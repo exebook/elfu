@@ -29,7 +29,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
   - [each looping `⬌` and `⬍`][205]
   - [console.log `ロ`][206]
   - [if, else, elseif `⌥` `⎇` `⥹`][207]
-  - [var and def `∇` `∆`][208]
+  - [var and def `∇` `∆` `≜`][208]
   - [stack operations `⬊` `⬈` `⬋` `⬉`][209]
   - [superscript indexing `Xⁱ`][210]
   - [this and undefined are `⚫` `⚪` `∅`][211]
@@ -195,26 +195,41 @@ if (true) ロ 'here'
  - `⌥` is replaced with `if`.
  - `⎇` is replaced with `else`.
  - `⥹` is replaced with `else if`.
+ - if the conditional statement is enclosed in `{}`, then `()` are optional
+
  
 ```javascript
 ⌥ (x == 1) ロ 'GREAT'
 ⥹ (x == 2) ロ 'OK'
 ⎇ ロ 'WRONG'
+
+⌥ x == 2 { ロ 'x equals to two' ⦙ }
 ``` 
  
 ---
-##### var and def ∇ ∆ 
- - typed as `va|TAB`, `de|TAB`.
+##### var and def ∇ ∆ ≜
+ - typed as `va|TAB`, `de|TAB`, `df|TAB`.
  - `∇` is replaced with `var`.
  - `x ∆` is translated to `var x =`.
  - `∆` reads as *is defined as* or just *define*.
  - `∆` used to be *delta*, but in fact it is a simplified form of a math symbol `≜` -- *definition* or *is defined as*.
+ - `x ≜ y` is replaced with `if (typeof x == 'undefined') x = y`.
  
 ```javascript
 x ∆ 100
 ⧗ (∇ i = 0; i < x; i++)
 a ∆ 1  b ∆ 'string'  c ∆ {}  d ∆ []
+```
 
+```javascript
+➮ countIt {
+	a.count ≜ 0
+	a.count++
+}
+state ∆ {}
+countIt(state)
+countIt(state)
+ロ state
 ```
 
 ---

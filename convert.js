@@ -82,8 +82,8 @@ var PREFIX = 'DOTCALL', callNumber = 1, lex = require('./lexer.js')
 var userReplace = [
 	{ find:'⚑', repl:'process.exit(1)' },
 	{ find:'☛', repl:'with' },
-	{ find:'ꗌ', repl:'JSON.stringify' },
-	{ find:'ꖇ', repl:'JSON.parse' },
+	{ find:'ꗌ', repl:'JSON.stringify', type:'auto' },
+	{ find:'ꖇ', repl:'JSON.parse', type: 'auto' },
 	{ find:'⛁', repl:'fs.readFileSync',  type: 'auto' },
 	{ find:'⛃', repl:'fs.writeFileSync' },
 	{ find:'⚡', repl:'(new Date().getTime())' },
@@ -133,7 +133,9 @@ function elfuConvert(s, fileName) {
 			varReplace(R, d1, 'var'+ i, 'id')
 		}
 	}
+	
 	findVar(R)
+	findDefineIfUndefined(R)
 //	autoArg(R, 'ロロ', 'process.stdout.write')
 	findLog(R, 'ロ')
 	findStdoutWrite(R, 'ロロ')
@@ -156,7 +158,8 @@ function elfuConvert(s, fileName) {
 
 //	simpleReplace(R, '', '')
 	simpleReplace(R, '⊜', '= 0')
-	simpleReplace(R, '⌥', 'if')
+	processIf(R, '⌥')
+//	simpleReplace(R, '⌥', 'if')
 	simpleReplace(R, '⥹', 'else if')
 	simpleReplace(R, '⧗', 'for')
 	simpleReplace(R, '⧖', 'while')
@@ -631,6 +634,36 @@ function findVar(A) {
 			if (brace && A[brace].s != '(') s = ';' + s
 			A[q].s = s
 			A[i].s = ' = '
+		}
+	}
+}
+
+function findDefineIfUndefined(A) {
+	for (var i = 1; i < A.length; i++) {
+		if (A[i].s == '≜') {
+			A[i].s = '='
+			var R = getNameLeft(A, i - 1)
+			var s = lex.join(A.slice(R.a, R.b + 1))
+			A[R.a].s = 'if (typeof '+s+' == "undefined") '+A[R.a].s
+		}
+	}
+}
+
+function processIf(A) {
+	for (var i = 0; i < A.length; i++) {
+		if (A[i].s == '⌥') {
+			A[i].s = 'if'
+			var n = i
+			while (true) {
+				var n = next(A, n)
+				if (n == undefined) return
+				if (A[n].s == '(') break
+				if (A[n].s == '{') {
+					A[i].s = 'if ('
+					A[n].s = ') ' + A[n].s
+					break
+				}
+			}
 		}
 	}
 }
