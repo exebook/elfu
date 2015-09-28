@@ -653,11 +653,11 @@ function processIf(A) {
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == '⌥') {
 			A[i].s = 'if'
-			var n = i
+			var n = next(A, i)
+			if (A[n].s == '(') continue
 			while (true) {
 				var n = next(A, n)
 				if (n == undefined) return
-				if (A[n].s == '(') break
 				if (A[n].s == '{') {
 					A[i].s = 'if ('
 					A[n].s = ') ' + A[n].s
