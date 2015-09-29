@@ -158,11 +158,10 @@ function elfuConvert(s, fileName) {
 
 //	simpleReplace(R, '', '')
 	simpleReplace(R, '⊜', '= 0')
-	processIf(R, '⌥')
-//	simpleReplace(R, '⌥', 'if')
-	simpleReplace(R, '⥹', 'else if')
+	processIf(R, '⌥', 'if')
+	processIf(R, '⥹', 'else if')
 	simpleReplace(R, '⧗', 'for')
-	simpleReplace(R, '⧖', 'while')
+	processIf(R, '⧖', 'while')
 	simpleReplace(R, '∞', 'while(true)')
 	simpleReplace(R, '⬈', '.pop()')
 	simpleReplace(R, '⬉', '.shift()')
@@ -206,7 +205,8 @@ function elfuConvert(s, fileName) {
 	var t = joinAdd(R)
 	R = lex.lex(t)
 	findMacros(R)
-	findEachs(R, handleEach)
+	findEachs(R, handleEach, '⬌')
+	findEachs(R, handleIterator, '►')
 	findDotCalls(R, handleCall)
 	findSettings(R)
 	return lex.join(R, false)
@@ -335,6 +335,7 @@ function handleWhile(A, i) {
 }
 
 function handleEach1(A, i) {
+console.log('HERE')
 	var e = A.length, fun = 0, a = i
 	A[i].s = 'for'
 	while (i < e && A[i].s != '(') i++, console.log('scan');
@@ -612,16 +613,34 @@ function handleEach(A, i) {
 	var counter = A[prev(A, i)].s
 	A[prev(A, i)].s = ''
 	i++
+//	i ⬌ a { x++ }
+//	for (var i = 0; i < a.length; counter++)
 	var R = getNameRight(A, i), array = lex.join(R[0]), i = R[1]
 	for (var x = a; x < i; x++) A[x].s = ''
 	A[a].s = 'for(var '+counter+' = 0; '+counter+' < '+array+'.length; '+counter+'++)'
 }
 
-function findEachs(A, f) {
+function handleIterator(A, i) {
+	var a = i
+	var c = A[prev(A, i)].s // c is iterator item, c+_ is counter
+	A[prev(A, i)].s = ''
+	i++
+	// i ► a { x++ }
+	// for (n_ ∆ 0, x = a[n_]; n_ < a↥; n_++, x = a[n_])
+	var R = getNameRight(A, i), array = lex.join(R[0]), i = R[1]
+	for (var x = a; x < i; x++) A[x].s = ''
+	A[a].s = 'for(var '
+		+ c + '_=0,'
+		+ c + '=' + array + '[' + c + '_]; '
+		+ c + '_<' + array + '.length; '
+		+ c + '_++,' +c+ '=' + array + '['+c+'_])'
+}
+
+function findEachs(A, f, sym) {
 	var i = next(A, 0)
 	i = next(A, i)
 	for (; i < A.length; i++) {
-		if (A[i].s == '⬌') f(A, i)
+		if (A[i].s == sym) f(A, i)
 	}
 }
 
@@ -649,17 +668,17 @@ function findDefineIfUndefined(A) {
 	}
 }
 
-function processIf(A) {
+function processIf(A, sym, str) {
 	for (var i = 0; i < A.length; i++) {
-		if (A[i].s == '⌥') {
-			A[i].s = 'if'
+		if (A[i].s == sym) {
+			A[i].s = str
 			var n = next(A, i)
 			if (A[n].s == '(') continue
 			while (true) {
 				var n = next(A, n)
 				if (n == undefined) return
 				if (A[n].s == '{') {
-					A[i].s = 'if ('
+					A[i].s = str + ' ('
 					A[n].s = ') ' + A[n].s
 					break
 				}
@@ -702,7 +721,7 @@ function findMacros(A) {
 //}
 
 function getNameRight(A, i) {
-	var e = A.length, fun = 0, arr = 0, R = [], firstToken = true
+	var e = A.length, fun = 0, arr = 0, blk = 0, R = [], firstToken = true
 	while (i < e) {
 		var c = A[i]
 		var none = false
@@ -712,6 +731,10 @@ function getNameRight(A, i) {
 		else if (arr > 0) {
 			if (c.s == ']') arr--; else if (c.s == '[') arr++
 		}
+else if (blk > 0) {
+	if (c.s == '}') blk--; else if (c.s == '{') blk++
+}
+		else if (c.s == '{' && firstToken) blk++, firstToken = false
 		else if (c.s == '(') fun++
 		else if (c.s == '[') arr++
 		else if (c.s == '.') ;
@@ -733,8 +756,13 @@ function autoArg(A, find, repl0) {
 			var repl = repl0
 			var a = next(A, i)
 			if (a) {
-			//TODO: ⦙ []❄(➮ { $ (⬠⚂ - 0.5) } )  // sym-nexts are not detected
-				if (A[a].type == 'id' || A[a].type == 'str' || A[a].s == 'this.') {
+			//TODO: ⦙ []❄(➮ { $ (⬠⚂ - 0.5) } )  // sym-nexts are not detected?
+			//TODO: a ⬊ {a:123}.a  -> converts to a.push({a:123}).a
+				if (A[a].s == '{'
+				|| A[a].s == '['
+				|| A[a].type == 'id'
+				|| A[a].type == 'str'
+				|| A[a].s == 'this.') {
 					var R = getNameRight(A, a)
 					A[a].s = '(' + A[a].s
 					A[R[1]-1].s += ')'

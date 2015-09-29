@@ -26,7 +26,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
   - [return statement `$`][202]
   - [while and for statements `⧖` and `⧗`][203]
   - [break and continue statements `@`][204]
-  - [each looping `⬌` and `⬍`][205]
+  - [each looping `⬌`,'►' and `⬍`][205]
   - [console.log `ロ`][206]
   - [if, else, elseif `⌥` `⎇` `⥹`][207]
   - [var and def `∇` `∆` `≜`][208]
@@ -161,12 +161,24 @@ Here is how Elfu looks in author's editor:
  - `⬌` typed as `ea|TAB`.
  - compiles to `for (var i = 0; i < obj.length; i++)`.
  - just type `i ⬌ obj`, it converts to the above.
+ - `►` (iterator) typed as `it|TAB`.
+ - ► is similar to ⬌, but the 'i' is an array item rather than an index.
  - `⬍` typed as `fe|TAB`.`
  - simply converts to `.forEach`.
 
 ```javascript
 var a = [1,2,3]
-i ⬌ a console.log(a[i])
+i ⬌ a { console.log(a[i]) }
+```
+
+```javascript
+a ∆ [1,2,3]
+i ⬌ a ロ aⁱ
+```
+
+```javascript
+a ∆ [1,2,3]
+i ► a ロ i
 ```
 
 ```javascript
