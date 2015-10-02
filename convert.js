@@ -397,6 +397,7 @@ function getNameLeft(A, i) {
 		else if (c.s == 'this.') ; // bad hack
 		else if (c.type == 'id') ;
 		else if (c.type == 'space') ;
+		else if (c.s[0] == '[' && c.s[c.s.length-1] == ']') ; //ᵃ⁰
 		else break
 		i--
 	}
@@ -662,6 +663,7 @@ function findDefineIfUndefined(A) {
 		if (A[i].s == '≜') {
 			A[i].s = '='
 			var R = getNameLeft(A, i - 1)
+			console.log(R)
 			var s = lex.join(A.slice(R.a, R.b + 1))
 			A[R.a].s = 'if (typeof '+s+' == "undefined") '+A[R.a].s
 		}
