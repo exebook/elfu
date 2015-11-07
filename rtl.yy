@@ -1,7 +1,8 @@
 fs = ≣ 'fs'
 
-color = function(c) { return '\u001b[3'+c+'m'}
-colorEnd = function() { return '\u001b(B\u001b[m'}
+//color = function(c) { return '\u001b[3'+c+'m'}
+color = ➮ { $'\u001b[38;5;'+a+'m' }
+colorEnd = ➮ { $'\u001b(B\u001b[m'}
 
 timeLimit = ➮ timeLimit {
 	⌥ (arguments.callee.t ≟ ∅) {
@@ -45,6 +46,7 @@ sysexe = ➮ sysexe cmd arg f {
 	x.stdout.on('data', d) 
 	x.stderr.on('data', d)
 	x.on('close', ➮{ f(L ⌶ '\n', a) })
+	$ x
 }
 
 process_stdout_write_multi = ➮ {

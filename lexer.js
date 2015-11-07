@@ -3,6 +3,10 @@ module.exports.lex = function(s) {
 	if (!symLookupTable) symLookupTable = buildSymLookupTree()
 	return mainLoop(s)
 }
+module.exports.addSymbol = function(sym) {
+	elfuLexerSyms += ' ' + sym
+	symLookupTable = buildSymLookupTree()
+}
 var symLookupTable
 
 function isCharNum(c) { return (c >= '0' && c <= '9') }
@@ -20,7 +24,15 @@ function isCharHex(c) {
 	return false
 }
 
-elfuLexerSyms = '` ᗰ ᙏ ᗲ ᗶ ᗼ ᙢ ᙕ ᙨ ᙜ ᘻ ❶ ❷ ❸ ❹ ❺ ❻ ❼ ❽ ❾ ❿ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ᵃ ᵇ ᶜ ᵈ ᵉ ᶠ ᵍ ʰ ⁱ ʲ ᵏ ˡ ᵐ ⁿ ᵒ ᵖ ʱ ʳ ˢ ᵗ ᵘ ᵛ ʷ ˣ ʸ ᶻ ∆ ↟ ꕉ ⌶ ⫴ ⋃ ⨄ ꔬ ⧉ ꗚ ❄ ⩪ △ ◬ ⟡ ⌑ ≞ ≂ ≈ ≀≀ ≀ ≁ ∼ ≃ ≄ ⦙ ⍽ ★ ⬠ ⚂ ♻ ★ ⏀ ⌿⌚ ⌿⌛ ⚪ ⚫ ⬤ ⋀ ⋁ ↥ ⎇ ⌚ ⌛ ≣ ≠ ≟ ⦾ ⦿ ⬌ ⬊ ⬈ ⬉ ⬋ ⬍ ∞ ⧖ ∅ ⧗ ⌥ ⥹ ⊜ ⨃ ∇ ➮ ꗝ √ ⚑ ⟑ ⚙ ≜ ロ ロロ ► # $ @ : :: ( ) [ ] { } .( , ; . - + * / % ~ | ++ -- != || && == === >= <= += -= *= /= %= >> << >>= <<= >>> <<< >>>= <<<= ?' // ∿ sine?
+leninLexerSyms = '→ → ↑ ↓                                        '
+
+elfuLexerSyms = '` ᗰ ᙏ ᗲ ᗶ ᗼ ᙢ ᙕ ᙨ ᙜ ᘻ ❶ ❷ ❸ ❹ ❺ ❻ ❼ ❽ ❾ ❿ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ᵃ ᵇ ᶜ ᵈ ᵉ ᶠ ᵍ ʰ ⁱ ʲ ᵏ ˡ ᵐ ⁿ ᵒ ᵖ ʱ ʳ ˢ ᵗ ᵘ ᵛ ʷ ˣ ʸ ᶻ ∆ ↟ ꕉ ⌶ ⫴ ⋃ ⨄ ꔬ ⧉ ꗚ ❄ ⩪ △ ◬ ⟡ ⌑ ≞ ≂ ≈ ≀≀ ≀ ≁ ∼ ≃ ≄ ⦙ ⍽ ★ ⬠ ⚂ ♻ ★ ⏀ ⌿⌚ ⌿⌛ ⚪ ⚫ ⬤ ⋀ ⋁ ↥ ⎇ ⌚ ⌛ ≣ ≠ ≟ ⦾ ⦿ ⬌ ⬊ ⬈ ⬉ ⬋ ⬍ ∞ ⧖ ∅ ⧗ ⌥ ⥹ ⊜ ⨃ ∇ ➮ ꗝ √ ⚑ ⟑ ⚙ ≜ ロ ロロ ► ꔪ'
++ ' # $ @ : :: ( ) [ ] { } .( , ; . - + * / % ~ | ++ -- != || && == === >= <= += -= *= /= %= >> << >>= <<= >>> <<< >>>= <<<= ?'
++ ' '+ leninLexerSyms
+// ∿ sine?
+
+
+/*this is not part of elfu, but support for Leenin prototype*/
 
 function buildSymLookupTree() {
 	var syms = elfuLexerSyms

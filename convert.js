@@ -31,12 +31,9 @@ function processIncludes(s, fileName) {
 		else
 			R.push(s[i])
 	}
-//	console.log('=================\n',R.join('\n'), '\n========')
 	return R.join('\n')
 }
 
-//console.log( replaceCompilerVars('ロ` abc\n\n\n a=5; ロ`xyz', 'inline'))
-//return
 /*
 TODO:
  -------- lexer -------
@@ -46,6 +43,7 @@ L[L ↥ - 1] ꕉ
 	bug: ⌥ (⬤ tail ≟ 'string') flowꕉ += t
 	converts to: if (typeof  (tail )== 'string') flow[(typeof  (tail )== 'string') flow.length
  -------- convert -----
+⌥ a { ロ b ⦙ }  -->  no need for ⦙ obviously
 concat allow ꗚ[]
 add [-1] [-2] [-3]
 remove ⊜ (or change)
@@ -81,7 +79,7 @@ var PREFIX = 'DOTCALL', callNumber = 1, lex = require('./lexer.js')
 
 var userReplace = [
 	{ find:'⚑', repl:'process.exit(1)' },
-	{ find:'☛', repl:'with' },
+	{ find:'☛', repl:'with', type:'auto' },
 	{ find:'ꗌ', repl:'JSON.stringify', type:'auto' },
 	{ find:'ꖇ', repl:'JSON.parse', type: 'auto' },
 	{ find:'⛁', repl:'fs.readFileSync',  type: 'auto' },
@@ -96,10 +94,20 @@ var userReplace = [
 	{ find:'ꘉ', repl:'bind', type: 'auto'},
 	{ find:'__argarr', repl:'Array.prototype.slice.apply(arguments)'},
 	{ find:'**', repl:'arguments.callee.'}, // ** is temporary, find a better char
+
+// lenin prototype support:
+	{ find:'', repl:'stroi', type:'lenin'},
+	{ find:'', repl:'riad', type: 'lenin'},
+	{ find:'', repl:'poniatie', type: 'lenin'},
+	{ find:'', repl:'gorenie', type: 'lenin'},
+	{ find:'', repl:'deistvie', type: 'lenin'},
+	{ find:'', repl:'soznanie', type: 'lenin'},
+//	{ find:'', repl:''},
+//leninLexerSyms = '→ → ↑ ↓                                        '
+
 ]
 
 function userSym(sym, id, type) {
-//	console.log('Add User Symbol:', sym, id, type, userReplace.length)
 	userReplace.push({ find:sym, repl:id, type:type })
 }
 module.exports.userReplace = userReplace
@@ -125,6 +133,8 @@ function elfuConvert(s, fileName) {
 		for (var i = 0; i < a.length; i++)
 			if (a[i].type == 'auto')
 				autoArg(R, a[i].find, a[i].repl, 'id')
+			else if (a[i].type == 'lenin')
+				leninArg(R, a[i].find, a[i].repl, 'id')
 			else
 				simpleReplace(R, a[i].find, a[i].repl, 'id')
 		for (var i = 0; i < t.length; i++) {
@@ -205,6 +215,7 @@ function elfuConvert(s, fileName) {
 	var t = joinAdd(R)
 	R = lex.lex(t)
 	findMacros(R)
+	findTuples(R, 'ꔪ')
 	findEachs(R, handleEach, '⬌')
 	findEachs(R, handleIterator, '►')
 	findDotCalls(R, handleCall)
@@ -335,10 +346,9 @@ function handleWhile(A, i) {
 }
 
 function handleEach1(A, i) {
-console.log('HERE')
 	var e = A.length, fun = 0, a = i
 	A[i].s = 'for'
-	while (i < e && A[i].s != '(') i++, console.log('scan');
+	while (i < e && A[i].s != '(') i++
 	a = i+1
 	while (i < e) {
 		var c = A[i]
@@ -348,7 +358,6 @@ console.log('HERE')
 	}
 	var args = lex.join(A.slice(a, i)).split(',')
 	args[0] = trimStr(args[0]), args[1] = trimStr(args[1])
-//	console.log(args)
 	for (var x = a; x < i; x++) A[x].s = ''
 	A[a-1].s = '(var '+args[0]+' = 0; '
 		+args[0]+' < '+args[1]+'.length; '+args[0]+'++'
@@ -586,7 +595,6 @@ function findColon(A, find, replace) {
 					b = next(A, b)
 					if (A[b].s == '{') break
 					if (A[b].s == ';'||A[b].s == '⦙') {
-						console.log('case')
 						addTo(A[i], '(')
 						addTo(A[i+1], '(a,b,c){ return ')
 						A[b].s = '}).bind(this)'
@@ -663,7 +671,6 @@ function findDefineIfUndefined(A) {
 		if (A[i].s == '≜') {
 			A[i].s = '='
 			var R = getNameLeft(A, i - 1)
-			console.log(R)
 			var s = lex.join(A.slice(R.a, R.b + 1))
 			A[R.a].s = 'if (typeof '+s+' == "undefined") '+A[R.a].s
 		}
@@ -752,6 +759,7 @@ else if (blk > 0) {
 	}
 	return [R, i]
 }
+
 function autoArg(A, find, repl0) {
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == find) {
@@ -778,4 +786,73 @@ function autoArg(A, find, repl0) {
 		}
 	}
 }
+
+function leninArg(A, find, repl0) {
+	for (var i = 0; i < A.length; i++) {
+		if (A[i].s == find) {
+			var repl = repl0
+			var args = []
+			var a = next(A, i)
+			if (a && A[a].s != '(') {
+				while (a && A[a].type == 'id' || A[a].s == '.') {
+					args.push(A[a].s)
+					A[a].s = ''
+					a = next(A, a)
+				}
+				args = args.map(function(a){return '"'+a+'"'})
+				repl += '(' + args.join(',') + ')['+args[args.length-1]+']'
+			}
+			A[i].s = repl
+			i = a
+		}
+	}
+}
+
+//  a,b ← f()
+//  _elfu_left ∆ f(); a=_elfu_left⁰, b=_elfu_left¹
+// 
+
+function findTuples(A, symbol) {
+	function parseList () {
+		function skipSpaces() {
+			while (A[x].type == 'space' && x >= 0) x--
+		}
+		function isComma() {
+			if (x >= 0 && A[x].s == ',') return true
+			return false
+		}
+		var x = i
+		var list = []
+		while (true) {
+			var R = getNameLeft(A, x - 1)
+			var s = lex.join(A.slice(R.a, R.b + 1))
+			list.unshift(s)
+			x = R.a-1
+			skipSpaces()
+			if (!isComma()) break
+		}
+		return [list, x+1]
+	}
+	for (var i = 0; i < A.length; i++) {
+		if (A[i].s == symbol) {
+			var ret = parseList()
+			for (var x = ret[1]; x <= i; x++) {
+				A[x].s = ''
+			}
+			list = ret[0]
+			A[i-1].type = 'id'
+			A[i-1].s = '__elfu_left'
+			A[i].type = 'sym'
+			A[i].s = '='
+			var R = getNameRight(A, i+1), array = lex.join(R[0]), end = R[1]+1
+			//with this +1, something is wrong
+			R = []
+			for (var n = 0; n < list.length; n++) {
+				R.push(list[n] + '=' + '__elfu_left[' + n + ']')
+			}
+			addTo(A[end-1],';'+R.join(',')+';')
+		}
+	}
+}
+
 

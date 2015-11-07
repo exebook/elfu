@@ -8,7 +8,7 @@ if (name == undefined) {
 	console.log('elfu error: no input file')
 	return
 }
-var elfu = require('elfu')
+elfu = require('elfu')
 if (name == '-v' || name == '--version') {
 	console.log(elfu.version)
 	return

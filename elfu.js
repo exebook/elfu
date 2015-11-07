@@ -1,7 +1,10 @@
-module.exports.version = '0.0.12'
-
 var fs = require('fs')
 var convertor = require('./convert')
+
+module.exports.version = (function(){
+	return JSON.parse(fs.readFileSync(__dirname+'/package.json')).version
+})()
+
 
 loadFile = function loadFile(module, filename) {
 	var raw, s

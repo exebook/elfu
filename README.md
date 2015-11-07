@@ -619,6 +619,28 @@ str ∆ '''
 ```
 (GitHub markdown does highlight with red background for some reason.)
 
+
+##### tuples
+ - `ꔪ` is typed as `ꔪ|TAB`.
+ - `a,b ꔪ <expr>` is replaced with `tmp=<expr>;a=tmp[0],b=tmp[1]`.
+
+```javascript
+➮ repl { $a.replace(b, c) }
+
+➮ half {
+	$[a, a/2]
+}
+
+A ∆ {whole:∅, part:∅}
+
+☛ A { whole, part ꔪ half(200) }
+
+∇ a,b,c ꔪ [33,44,55]
+
+ロ A,a,b,c
+
+```
+
 #Usage
  - install with **npm**, `[sudo] npm i -g elfu`.
  - `yy <program>` run the `.yy` program.
