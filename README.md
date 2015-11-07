@@ -624,7 +624,7 @@ str ∆ '''
 
 ---
 ##### tuples
- - `ꔪ` is typed as `ꔪ|TAB`.
+ - `ꔪ` is typed as `tu|TAB`.
  - `a,b ꔪ <expr>` is replaced with `tmp=<expr>;a=tmp[0],b=tmp[1]`.
 
 ```javascript
