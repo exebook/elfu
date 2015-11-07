@@ -50,6 +50,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
   - [symbolic variables][226]
   - [is defined `⟑`][227]
   - [multi line strings with `'''`][228]
+  - [tuples with `ꔪ`][229]
  - [Usage][3]
  - [Dotcall syntax][4]
  - [Feedback][5]
@@ -99,6 +100,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 [226]: https://github.com/exebook/elfu#symbolic-variables
 [227]: https://github.com/exebook/elfu#is-defined
 [228]: https://github.com/exebook/elfu#multi-line-strings
+[229]: https://github.com/exebook/elfu#tuples
 
 #Screenshot
 Here is how Elfu looks in author's editor:
@@ -602,6 +604,7 @@ s ∆ {x:123}
 ⌥ (⟑s.x) ロ 's.x is not undefined'
 ```
 
+---
 ##### multi line strings
 
 Elfu supports multi line strings enclosed with opening `'''\n` and closing `'''`.
@@ -619,7 +622,7 @@ str ∆ '''
 ```
 (GitHub markdown does highlight with red background for some reason.)
 
-
+---
 ##### tuples
  - `ꔪ` is typed as `ꔪ|TAB`.
  - `a,b ꔪ <expr>` is replaced with `tmp=<expr>;a=tmp[0],b=tmp[1]`.
