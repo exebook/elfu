@@ -641,7 +641,7 @@ A ∆ {whole:∅, part:∅}
 ∇ a,b,c ꔪ [33,44,55]
 
 ロ A,a,b,c
-
+//{ whole: 200, part: 100 } 33 44 55
 ```
 
 #Usage
