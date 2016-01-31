@@ -122,7 +122,7 @@ Here is how Elfu looks in author's editor:
 - anonymous function with arguments `a,b`: `➮ - a b {}`
 
 
-```javascript
+```js
 ➮ compare (a, b) { console.log(a == b) }
 ➮ compare a b { console.log(a == b) }
 ➮ compare { console.log(a == b) }
@@ -130,9 +130,15 @@ Here is how Elfu looks in author's editor:
 ```
 
 ```javascript
-a ∆ [1,2,3,4,5] ꔬ ➮ a > 2 ;
+n = 2
+a ∆ [1,2,3,4,5] ꔬ ➮ a > n ; // 'this' is bound to a caller
 ロ a // prints [3,4,5]
+```
 
+```javascript
+Math.sum = ➮ - x y {
+	$ x+y
+}
 ```
 
 ---
