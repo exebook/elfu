@@ -154,6 +154,7 @@ Math.sum = ➮ - x y {
  - `⧖` is replaced with `while`.
  - `⧗` is replaced with `for`.
  - typed as `wh|TAB`, `fo|TAB`.
+ - parens () can be avoided if you have braces {}
  
 ```javascript
 ⧖ (true) step()
@@ -171,6 +172,14 @@ Math.sum = ➮ - x y {
 	if (again()) ♻
 	if (finished()) @
 }
+```
+
+```js
+n ∆ 5
+⧖ n > 0 { // parens, ( and ) are not needed
+	ロ n--
+}
+
 ```
 
 ---
@@ -196,6 +205,7 @@ i ⬌ a ロ aⁱ
 ```javascript
 a ∆ [1,2,3]
 i ► a ロ i
+// index still can be accessed with `_` + name, in this case `_i`.
 ```
 
 ```javascript
