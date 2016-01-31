@@ -118,7 +118,7 @@ Here is how Elfu looks in author's editor:
 - use `➮f(){}` or `➮{}` syntax to declare an anomymous function without arguments.
 - `➮ {}` is a lambda with default arguments *a, b, c*.
 
-- `➮ a + b ;` becomes `(➮ { $a+b }).bind(this)`
+- `➮ a + b ;` becomes `((➮ { $a+b }).bind(this))` - aka "arrow function"
 - anonymous function with arguments `a,b`: `➮ - a b {}`
 
 
