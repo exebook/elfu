@@ -47,8 +47,8 @@ L[L ↥ - 1] ꕉ
 concat allow ꗚ[]
 add [-1] [-2] [-3]
 remove ⊜ (or change)
-if... {}
-☛(⚪) {} -> ☛ ... {}
+if... {} // DONE
+☛(⚪) {} -> ☛ ... {} // is this done?
 remove commas f(a,b,c) = f(a b c)
 add ➮ as <= (global func)
 add ➮ as --> (anonymous func)
@@ -58,7 +58,7 @@ other assignments:
 	a =< b, a => b  if(a<b)a=b
 ❄(➮{}) make as ❄➮{} or even ❄{}
 
-isolated spaces:
+isolated namespaces:
 ❄{
 	s ∆ ''
 }
@@ -102,6 +102,7 @@ var userReplace = [
 	{ find:'', repl:'gorenie', type: 'lenin'},
 	{ find:'', repl:'deistvie', type: 'lenin'},
 	{ find:'', repl:'soznanie', type: 'lenin'},
+
 //	{ find:'', repl:''},
 //leninLexerSyms = '→ → ↑ ↓                                        '
 
@@ -124,6 +125,9 @@ function elfuConvert(s, fileName) {
 	var a = userReplace
 	for (var i = 0; i < a.length; i++)
 		elfuLexerSyms += ' ' + a[i].find
+userSym('⏚', 'sendCallback')
+userSym('☎', 'dispatcher')
+userSym('✚', 'viewCounter.')
 	var t = '❶❷❸❹❺❻❼❽❾❿', d = '①②③④⑤⑥⑦⑧⑨⑩'
 	var ix = '⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʱʳˢᵗᵘᵛʷˣʸᶻ',
 		re = '0123456789abcdefghijklmnopqrstuvwxyz'
@@ -516,10 +520,14 @@ function varReplace(A, find, replace, type) {
 function findLog(A, find) {
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == find) {
+			var I = i
 			A[i].s = 'console.log('
 			while (A[i] && A[i].type != 'line' && A[i].s != ';' && A[i].s != '⦙') i++
 			if (!A[i]) A[i] = {type:'repl',s:')'}
 			else addTo(A[i], ')')
+			for (var space = I; space < i; space++) {
+				if (A[space].type == 'space') A[space].s = ''
+			}
 		}
 	}
 }
@@ -583,36 +591,63 @@ function findIsUndefined (A) {
 ➮ () {}
 ➮ {}
 ➮ (f) {}
-➮ a + b ; // BECOMES (➮ { $a+b }).bind(this)
+➮ a + b ; // BECOMES ((➮ { $a+b }).bind(this))
+➮ - a b {} // anonymous function (a, b)
 */
 function findColon(A, find, replace) {
+	
+	function DUMP(start, count) {
+		console.log('--------DUMP---------\n')
+		for (var i = start; i < start+count; i++) {
+			process.stdout.write('(' + A[i].s + '), ')
+		}
+		console.log('\n-----------------')
+	}
+	
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == find && ((i > 0 &&
 			(A[i-1].type != 'id' && A[i-1].type != 'str')) || i == 0)) {
+				var I = i
 				A[i].s = replace+' '
-				var b = i 
+				var b = i
 				while (true) {
 					b = next(A, b)
 					if (A[b].s == '{') break
 					if (A[b].s == ';'||A[b].s == '⦙') {
-						addTo(A[i], '(')
+						addTo(A[i], '((')
 						addTo(A[i+1], '(a,b,c){ return ')
-						A[b].s = '}).bind(this)'
+						A[b].s = '}).bind(this))'
 						return
 					}
 				}
+				var firstArg = next(A, i), anonymous = false
+				if (A[firstArg].s == '-') {
+					i = firstArg
+					A[firstArg].s = ''
+					A[firstArg].type = 'space'
+					anonymous = true
+				}
 				i = next(A, i)
-				var ids = []
+				var ids = [], name = undefined
 				while (A[i].type == 'id') {
-					ids.push(A[i].s)
-					if (ids.length > 1) A[i].s = ''
+				
+					if (!anonymous && name == undefined)
+						name = A[i].s
+					else 
+						ids.push(A[i].s)
+						
+					if (name || anonymous) A[i].s = ''
 					i = next(A, i)
 				}
-				if (ids.length > 1) {
-					ids.shift()
+				if (name) addTo(A[i], name)
+
+				if (ids.length > 0 || anonymous) {
 					var s = '(' + ids.join(',') + ')'
 					addTo(A[i], s)
 				} else if (A[i].s == '{') addTo(A[i], '(a,b,c)')
+				for (var space = I; space < i; space++) {
+					if (A[space].type == 'space') A[space].s = ''
+				}
 			}
 	}
 }

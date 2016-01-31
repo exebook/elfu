@@ -54,3 +54,5 @@ process_stdout_write_multi = ➮ {
 	process.stdout.write(a)
 }
 
+isArray = ➮ isArray { $ a.map ≟ Array.prototype.map }
+

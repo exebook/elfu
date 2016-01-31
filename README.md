@@ -115,14 +115,23 @@ Here is how Elfu looks in author's editor:
 - Elfu translator will replace `➮` with `function`. 
 - you can avoid `(`, `)` and `,` in argument declaration.
 - if you omit any arguments, arguments `a` `b` `c` are default.
-- use `➮f(){}` syntax to declare a function without arguments.
+- use `➮f(){}` or `➮{}` syntax to declare an anomymous function without arguments.
 - `➮ {}` is a lambda with default arguments *a, b, c*.
+
+- `➮ a + b ;` becomes `(➮ { $a+b }).bind(this)`
+- anonymous function with arguments `a,b`: `➮ - a b {}`
+
 
 ```javascript
 ➮ compare (a, b) { console.log(a == b) }
 ➮ compare a b { console.log(a == b) }
 ➮ compare { console.log(a == b) }
 [1,2,3].forEach(➮ { console.log(a) })
+```
+
+```javascript
+a ∆ [1,2,3,4,5] ꔬ ➮ a > 2 ;
+ロ a // prints [3,4,5]
 
 ```
 
@@ -642,6 +651,14 @@ A ∆ {whole:∅, part:∅}
 
 ロ A,a,b,c
 //{ whole: 200, part: 100 } 33 44 55
+```
+TODO: add support for simple name matching with ꔪ, like this:
+```js
+obj ∆ { a:1, b:2 }
+b,a ꔪ obj
+//b = obj['b'], a = obj['a']
+ロ a, b
+// 1, 2
 ```
 
 #Usage

@@ -26,12 +26,17 @@ function isCharHex(c) {
 
 leninLexerSyms = '→ → ↑ ↓                                        '
 
+spaseboLexerSyms = ' ⏚ ☎ ✚'
+
 elfuLexerSyms = '` ᗰ ᙏ ᗲ ᗶ ᗼ ᙢ ᙕ ᙨ ᙜ ᘻ ❶ ❷ ❸ ❹ ❺ ❻ ❼ ❽ ❾ ❿ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ᵃ ᵇ ᶜ ᵈ ᵉ ᶠ ᵍ ʰ ⁱ ʲ ᵏ ˡ ᵐ ⁿ ᵒ ᵖ ʱ ʳ ˢ ᵗ ᵘ ᵛ ʷ ˣ ʸ ᶻ ∆ ↟ ꕉ ⌶ ⫴ ⋃ ⨄ ꔬ ⧉ ꗚ ❄ ⩪ △ ◬ ⟡ ⌑ ≞ ≂ ≈ ≀≀ ≀ ≁ ∼ ≃ ≄ ⦙ ⍽ ★ ⬠ ⚂ ♻ ★ ⏀ ⌿⌚ ⌿⌛ ⚪ ⚫ ⬤ ⋀ ⋁ ↥ ⎇ ⌚ ⌛ ≣ ≠ ≟ ⦾ ⦿ ⬌ ⬊ ⬈ ⬉ ⬋ ⬍ ∞ ⧖ ∅ ⧗ ⌥ ⥹ ⊜ ⨃ ∇ ➮ ꗝ √ ⚑ ⟑ ⚙ ≜ ロ ロロ ► ꔪ'
-+ ' # $ @ : :: ( ) [ ] { } .( , ; . - + * / % ~ | ++ -- != || && == === >= <= += -= *= /= %= >> << >>= <<= >>> <<< >>>= <<<= ?'
-+ ' '+ leninLexerSyms
++ ' # $ @ : :: ( ) [ ] { } .( , ; . - + * / % ~ ^ | ++ -- != || && == === >= <= += -= *= /= %= >> << >>= <<= >>> <<< >>>= <<<= ?'
++ ' '+ leninLexerSyms + spaseboLexerSyms
 // ∿ sine?
-
-
+/*
+⌥ a ≟ 0 {
+} ⥹ x ≠ 4 {
+}
+*/
 /*this is not part of elfu, but support for Leenin prototype*/
 
 function buildSymLookupTree() {
@@ -48,7 +53,7 @@ function buildSymLookupTree() {
 	return T
 }
 
-function checkSym(s, i){
+function checkSym(s, i) {
 	var Z = symLookupTable, x = i
 	while (Z = Z[s[x]]) x++
 	return x
