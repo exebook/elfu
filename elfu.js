@@ -1,5 +1,10 @@
 var fs = require('fs')
 var convertor = require('./convert')
+var mod = require('module')
+var old_resolveFilename = mod._resolveFilename
+
+var extraPaths = [process.cwd()]
+module.exports.paths = extraPaths
 
 module.exports.version = (function(){
 	return JSON.parse(fs.readFileSync(__dirname+'/package.json')).version
@@ -33,5 +38,12 @@ module.exports.handleExt = function handleExt(ext) {
 	if (require.extensions) {
 	   require.extensions[ext] = loadFile
 	}
+}
+
+
+
+mod._resolveFilename = function(request, parent) {
+	parent.paths = parent.paths.concat(extraPaths)
+	return old_resolveFilename(request, parent)
 }
 

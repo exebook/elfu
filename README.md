@@ -235,6 +235,7 @@ if (true) ロ 'here'
  - `⎇` is replaced with `else`.
  - `⥹` is replaced with `else if`.
  - if the conditional statement is enclosed in `{}`, then `()` are optional
+ - `()` are optional when the conditional statement starts with one of `@`, `$`, `ロ`, `⧖`, `⧗`, '∞', ';', '⌥'.
 
  
 ```javascript

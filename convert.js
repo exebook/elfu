@@ -712,6 +712,8 @@ function findDefineIfUndefined(A) {
 	}
 }
 
+var ifExprStops = { '{':1, '@':1, '$':1, ';':1, '⌥':1, '⧖':1, '⧗':1, '∞':1, 'ロ':1, 'console.log(':1 }
+
 function processIf(A, sym, str) {
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == sym) {
@@ -721,9 +723,11 @@ function processIf(A, sym, str) {
 			while (true) {
 				var n = next(A, n)
 				if (n == undefined) return
-				if (A[n].s == '{') {
+				if (ifExprStops[A[n].s] == 1) {
 					A[i].s = str + ' ('
-					A[n].s = ') ' + A[n].s
+					var last = A[n - 1]
+					if (!last.add) last.add = []
+					last.add.push(') ')
 					break
 				}
 			}
