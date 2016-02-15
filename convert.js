@@ -86,6 +86,7 @@ var userReplace = [
 	{ find:'⛃', repl:'fs.writeFileSync' },
 	{ find:'⚡', repl:'(new Date().getTime())' },
 	{ find:'∼◬', repl:'String.fromCharCode', type:'auto'}, 
+	{ find:'⚷', repl:'Object.keys', type:'auto'}, 
 	{ find:'ꘉ', repl:'.bind', type: 'auto'},
 	{ find:'√', repl:'Math.sqrt', type: 'auto'},
 	{ find:'↵', repl:'/\\n/g'},
@@ -720,16 +721,25 @@ function processIf(A, sym, str) {
 			A[i].s = str
 			var n = next(A, i)
 			if (A[n].s == '(') continue
-			while (true) {
+			var n2 = next(A, n)
+			var short = false
+			if (A[n].type == 'id' && A[n].s != 'typeof' && A[n2].type == 'id') {
+				short = true, n = n2
+			}
+			
+			else while (true) {
 				var n = next(A, n)
 				if (n == undefined) return
 				if (ifExprStops[A[n].s] == 1) {
-					A[i].s = str + ' ('
-					var last = A[n - 1]
-					if (!last.add) last.add = []
-					last.add.push(') ')
+					short = true
 					break
 				}
+			}
+			if (short) {
+				A[i].s = str + ' ('
+				var last = A[n - 1]
+				if (!last.add) last.add = []
+				last.add.push(') ')
 			}
 		}
 	}

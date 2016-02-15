@@ -51,6 +51,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
   - [is defined `⟑`][227]
   - [multi line strings with `'''`][228]
   - [tuples with `ꔪ`][229]
+  - [object keys as an array with `⚷`][230]
  - [Usage][3]
  - [Dotcall syntax][4]
  - [Feedback][5]
@@ -101,6 +102,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 [227]: https://github.com/exebook/elfu#is-defined
 [228]: https://github.com/exebook/elfu#multi-line-strings
 [229]: https://github.com/exebook/elfu#tuples
+[230]: https://github.com/exebook/elfu#oobject-keys-as-an-array-with-
 
 #Screenshot
 Here is how Elfu looks in author's editor:
@@ -676,6 +678,12 @@ b,a ꔪ obj
 //b = obj['b'], a = obj['a']
 ロ a, b
 // 1, 2
+```
+
+##### object keys as an array with '⚷'
+```js
+	obj ∆ {a:1, b:2, c:3}
+	ロ ⚷ obj // ['a', 'b', 'c']
 ```
 
 #Usage
