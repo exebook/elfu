@@ -102,7 +102,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 [227]: https://github.com/exebook/elfu#is-defined
 [228]: https://github.com/exebook/elfu#multi-line-strings
 [229]: https://github.com/exebook/elfu#tuples
-[230]: https://github.com/exebook/elfu#oobject-keys-as-an-array-with-
+[230]: https://github.com/exebook/elfu#object-keys-as-an-array-with-
 
 #Screenshot
 Here is how Elfu looks in author's editor:
@@ -680,6 +680,7 @@ b,a ꔪ obj
 // 1, 2
 ```
 
+---
 ##### object keys as an array with '⚷'
 ```js
 	obj ∆ {a:1, b:2, c:3}
