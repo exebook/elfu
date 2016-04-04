@@ -52,7 +52,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
   - [multi line strings with `'''`][228]
   - [tuples with `ꔪ`][229]
   - [object keys as an array with `⚷`][230]
-  - [namespace utility with `➮%93` and `➮|`][231]
+  - [namespace utility with `➮\\]` and `➮|`][231]
  - [Usage][3]
  - [Dotcall syntax][4]
  - [Feedback][5]
