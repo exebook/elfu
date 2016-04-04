@@ -237,7 +237,7 @@ if (true) ロ 'here'
  - `⎇` is replaced with `else`.
  - `⥹` is replaced with `else if`.
  - if the conditional statement is enclosed in `{}`, then `()` are optional
- - `()` are optional when the conditional statement starts with one of `@`, `$`, `ロ`, `⧖`, `⧗`, '∞', ';', '⌥'.
+ - `()` are optional when the conditional statement starts with one of `@`, `$`, `♻`, `ロ`, `⧖`, `⧗`, '∞', ';', '⌥'.
 
  
 ```javascript
@@ -685,6 +685,32 @@ b,a ꔪ obj
 ```js
 	obj ∆ {a:1, b:2, c:3}
 	ロ ⚷ obj // ['a', 'b', 'c']
+```
+---
+
+##### namespace utility with '➮|' and '➮]'
+If your elfu source file has `➮]` anywhere in it, then all top level declared functions of this file will be automatically exported to `module.exports`. If you use `➮|`, the functions will be exported as global variables.
+
+######main.yy
+```js
+➮|
+≣'lib'
+➮ load {
+	ロ 'loaded...'
+}
+
+scan()
+```
+
+######lib.yy
+```js
+➮ scan {
+	load()
+	ロ 'processing...'
+}
+
+➮|
+
 ```
 
 #Usage

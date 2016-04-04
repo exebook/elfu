@@ -10,6 +10,7 @@ var fs = require('fs')
 if (name) {
 	var s = fs.readFileSync(name).toString()
 	s = elfu.convert(s, name)
+	s = s.replace(/process_stdout_write_multi/g, 'process.stdout.write')
 	process.stdout.write(s)
 } else {
 	console.log('node yyj <in>')

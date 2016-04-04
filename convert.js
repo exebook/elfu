@@ -43,6 +43,10 @@ L[L ↥ - 1] ꕉ
 	bug: ⌥ (⬤ tail ≟ 'string') flowꕉ += t
 	converts to: if (typeof  (tail )== 'string') flow[(typeof  (tail )== 'string') flow.length
  -------- convert -----
+a, b, c ꔪ D ----> a = D[0], b = D[1], c = D[2]
+a, b, c ꔪ D ----> a = D.a, b = D.b, c = D.c
+A, B, C ∆ []  ---->  var A = [], B = [], C = []
+"(,,)" ---> replace with "(undefined,undefined,undefined)"
 ⌥ a { ロ b ⦙ }  -->  no need for ⦙ obviously
 concat allow ꗚ[]
 add [-1] [-2] [-3]
@@ -52,7 +56,7 @@ if... {} // DONE
 remove commas f(a,b,c) = f(a b c)
 add ➮ as <= (global func)
 add ➮ as --> (anonymous func)
-desctrucive assignment a <= b EQUALS a = b; delete b;
+desctrucive assignment a <=- b EQUALS a = b; delete b;
 other assignments:
 	a ?= b; if (b) a = b
 	a =< b, a => b  if(a<b)a=b
@@ -225,6 +229,7 @@ userSym('✚', 'viewCounter.')
 	findEachs(R, handleIterator, '►')
 	findDotCalls(R, handleCall)
 	findSettings(R)
+	autoExports(R)
 	return lex.join(R, false)
 }
 
@@ -451,16 +456,6 @@ function getArgs(A, i) {
 	return R
 }
 
-function getEnd(A, i) {
-	var e = A.length, level = 0, a = i
-	while (i < e) {
-		var c = A[i]
-		if (c.s == '}') if (level > 0) level--; else return i
-		if (c.s == '{') level++
-		i++
-	}
-}
-
 function joinAdd(A) {
 	var R = []
 	for (var i = 0; i < A.length; i++) {
@@ -493,6 +488,19 @@ function next(A, i) {
 function prev(A, i) {
 	while (--i >= 0) {
 		if (A[i].type != 'space') return i
+	}
+}
+
+function nextl(A, i) {
+	var e = A.length
+	while (++i < e) {
+		 if (A[i].type != 'space' && A[i].type != 'line') return i
+	}
+}
+
+function prevl(A, i) {
+	while (--i >= 0) {
+		if (A[i].type != 'space' && A[i].type != 'line') return i
 	}
 }
 
@@ -713,7 +721,7 @@ function findDefineIfUndefined(A) {
 	}
 }
 
-var ifExprStops = { '{':1, '@':1, '$':1, ';':1, '⌥':1, '⧖':1, '⧗':1, '∞':1, 'ロ':1, 'console.log(':1 }
+var ifExprStops = { '{':1, '@':1, '$':1, '♻':1, 'continue;':1, ';':1, '⌥':1, '⧖':1, '⧗':1, '∞':1, 'ロ':1, 'console.log(':1 }
 
 function processIf(A, sym, str) {
 	for (var i = 0; i < A.length; i++) {
@@ -737,9 +745,7 @@ function processIf(A, sym, str) {
 			}
 			if (short) {
 				A[i].s = str + ' ('
-				var last = A[n - 1]
-				if (!last.add) last.add = []
-				last.add.push(') ')
+				addTo(A[n], ')')
 			}
 		}
 	}
@@ -904,4 +910,61 @@ function findTuples(A, symbol) {
 	}
 }
 
+function getEnd(A, i) {
+	var e = A.length, level = 0, a = i
+	while (i < e) {
+		var c = A[i]
+		if (c.s == '}') {
+			if (level > 0) { level--; }
+			else return i
+		}
+		if (c.s == '{') level++
+		i++
+	}
+}
+
+function autoExports(A) {
+	function buildList(renameWithPrefix) {
+		var R = []
+		for (var i = 0; i < A.length; i++) {
+			if (A[i].s == 'function') {
+				for (var j = i + 1; j < i + 3; j++) {
+					if (A[j].type == 'id') {
+						name = A[j].s
+						if (renameWithPrefix) A[i].s = A[j].s + '=' + A[i].s
+						R.push(name)
+						for (var k = j + 1; k < j + 256; k++) {
+							if (A[k] == undefined) break
+							if (A[k].s == '{') {
+								var e = getEnd(A, k+1)
+								i = e+1
+								break
+							}
+						}
+						break
+					}
+				}
+			}
+		}
+		return R
+	}
+	for (var i = 0; i < A.length; i++) {
+		if (A[i].s == '➮]') {
+			var F = buildList(false)
+			for (var f = 0; f < F.length; f++) {
+				F[f] = 'module.exports.'+ F[f] +' = ' + F[f]
+			}
+			A[i].s = F.join('\n')
+		}
+		else if (A[i].s == '➮|') {
+			var F = buildList(true)
+			for (var f = 0; f < F.length; f++) {
+				//F[f] = ''+ F[f] +' = ' + F[f]
+			}
+			A[i].s = ''
+			A[i].type = 'space'
+			//F.join('\n')
+		}
+	}
+}
 

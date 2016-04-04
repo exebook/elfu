@@ -56,3 +56,32 @@ process_stdout_write_multi = ➮ {
 
 isArray = ➮ isArray { $ a.map ≟ Array.prototype.map }
 
+literate = ➮ - a f {
+	⌥ ⬤ a ≟ 'object' {
+		⌥ a.map {
+			i ► a {
+				⌥ ⬤i ≟ 'object' {
+					f(a, i_, aᵏ, 'arr')
+					arguments.callee(i, f)
+				}
+				⥹ ⬤i ≟ 'string' || ⬤i ≟ 'number' {
+					f(a, i_, aᵏ, 'arr')
+				}
+			}
+		}
+		⎇ {
+			K ∆ ⚷a
+			k ► K { 
+				⌥ ⬤ aᵏ ≟ 'object' {
+					o ∆ aᵏ
+					f(a, k, o, 'obj')
+					arguments.callee(o, f)
+				}
+				⥹ ⬤ k ≟ 'string' || ⬤k ≟ 'number' {
+					f(a, k, aᵏ)
+				}
+			}
+		}
+	}
+}
+

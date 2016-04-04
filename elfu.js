@@ -47,3 +47,4 @@ mod._resolveFilename = function(request, parent) {
 	return old_resolveFilename(request, parent)
 }
 
+require('./rtl.yy')
