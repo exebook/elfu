@@ -623,9 +623,7 @@ function findColon(A, find, replace) {
 				var b = i
 				while (true) {
 					b = next(A, b)
-					console.log('>',b, A[b])
 					if (A[b].s == '{') break
-					console.log('!')
 					if (A[b].s == ';'||A[b].s == '⦙') {
 						addTo(A[i], '((')
 						addTo(A[i+1], '(a,b,c){ return ')
