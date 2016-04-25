@@ -70,6 +70,8 @@ isolated namespaces:
 	var s = ''
 })()
 
+ещё более улучшеный this:
+⚫a = ⚫b 	можно же записать просто .a = .b
 
  ----- typing ------
  change la to .la (ꕉ), le to .le
@@ -621,7 +623,9 @@ function findColon(A, find, replace) {
 				var b = i
 				while (true) {
 					b = next(A, b)
+					console.log('>',b, A[b])
 					if (A[b].s == '{') break
+					console.log('!')
 					if (A[b].s == ';'||A[b].s == '⦙') {
 						addTo(A[i], '((')
 						addTo(A[i+1], '(a,b,c){ return ')
