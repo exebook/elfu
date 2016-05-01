@@ -1,3 +1,5 @@
+var ELFU_VERSION = require(__dirname+'/package.json').version
+
 function replaceCompilerVars(s, prefix) {
 	var n = 1, x = 0, L = s.length, Q = []
 	for (var x = 0; x < L; x++) {
@@ -75,6 +77,12 @@ isolated namespaces:
 
  ----- typing ------
  change la to .la (ꕉ), le to .le
+ 
+ --- bugs ---------
+	ロ ꗌcurrent ≟ ꗌexpected
+	translates to:
+	console.log(JSON.stringify(current==JSON.stringify(expected)) 
+
 */
 
 
@@ -84,6 +92,7 @@ module.exports.userSym = userSym
 var PREFIX = 'DOTCALL', callNumber = 1, lex = require('./lexer.js')
 
 var userReplace = [
+	{ find:'__elfuver', repl: "'"+ELFU_VERSION+"'" },
 	{ find:'⚑', repl:'process.exit(1)' },
 	{ find:'☛', repl:'with', type:'auto' },
 	{ find:'ꗌ', repl:'JSON.stringify', type:'auto' },
@@ -96,12 +105,12 @@ var userReplace = [
 	{ find:'ꘉ', repl:'.bind', type: 'auto'},
 	{ find:'√', repl:'Math.sqrt', type: 'auto'},
 	{ find:'↵', repl:'/\\n/g'},
-	{ find:'⁋', repl:'/\\r/g'},
+//	{ find:'⁋', repl:'/\\r/g'},
 	{ find:'↵⁋', repl:'/\\n\\r/g'},
 	{ find:'ꘉ', repl:'bind', type: 'auto'},
 	{ find:'__argarr', repl:'Array.prototype.slice.apply(arguments)'},
 	{ find:'**', repl:'arguments.callee.'}, // ** is temporary, find a better char
-
+	
 // lenin prototype support:
 	{ find:'', repl:'stroi', type:'lenin'},
 	{ find:'', repl:'riad', type: 'lenin'},
@@ -181,6 +190,7 @@ userSym('✚', 'viewCounter.')
 	simpleReplace(R, '⊜', '= 0')
 	processIf(R, '⌥', 'if')
 	processIf(R, '⥹', 'else if')
+	processIf2(R)
 	simpleReplace(R, '⧗', 'for')
 	processIf(R, '⧖', 'while')
 	simpleReplace(R, '∞', 'while(true)')
@@ -675,7 +685,8 @@ function handleEach(A, i) {
 	A[a].s = 'for(var '+counter+' = 0; '+counter+' < '+array+'.length; '+counter+'++)'
 }
 
-function handleIterator(A, i) {
+function handleIteratorOld(A, i) {
+/*
 	var a = i
 	var c = A[prev(A, i)].s // c is iterator item, c+_ is counter
 	A[prev(A, i)].s = ''
@@ -689,6 +700,64 @@ function handleIterator(A, i) {
 		+ c + '=' + array + '[' + c + '_]; '
 		+ c + '_<' + array + '.length; '
 		+ c + '_++,' +c+ '=' + array + '['+c+'_])'
+	*/
+}
+
+function handleIterator(A, i) {
+	var a = i
+	var c = A[prev(A, i)].s // c is iterator item, c+_ is counter
+	A[prev(A, i)].s = ''
+	i++
+	// n ► N { x++ }
+	// for (n_ ∆ 0; n_ < a↥; n_++)
+	// { n -> N[n] }
+	var R = getNameRight(A, i), array = lex.join(R[0]), i = R[1]
+	for (var x = a; x < i; x++) A[x].s = ''
+	A[a].s = 'for(var '+ c +'_=0; '+ c +'_<'+ array +'.length; '+ c +'_++) '
+	while (true) {
+		if (A[i].type != 'space' && A[i].type != 'line') {
+			if (A[i].s == '{') {
+				var e = getEnd(A, i+1)
+				for (var x = i+1; x < e; x++) {
+					if (A[x].s == c) A[x].s = array + '[' + c + '_]'
+				}
+				i = e+1
+			}
+			else {
+				var e = getEnd(A, i+1)
+				for (var e = i+1; e < A.length; e++)
+					if (A[e].type == 'line') {
+						break
+					}
+				
+				for (var x = i; x < e; x++) {
+					if (A[x].s == c) A[x].s = array + '[' + c + '_]'
+				}
+				i = e+1
+//
+//				console.log('\nFATAL ERROR ► requires {')
+//				var s = [], lineno = 1, linepos = -1
+//				for (var x = 0; x < i; x++) if (A[x].type == 'line') lineno++, linepos = x
+//				if (linepos >= 0) A[linepos].s = lineno + ')'
+//				A[i].s = '^' + A[i].s
+//				var a = linepos >= 0? linepos:i - 5, b = i + 10
+//				A = A.slice(a, b)
+//				s = lex.join(A)
+//				var e = s
+//				s = s.replace('^', '')
+//				var t = ''
+//				for (var i = 0; i < e.length; i++) {
+//					if (e[i] != '^') t += ' '
+//					else t += color(196)+'^'+color(7)
+//				}
+//				console.log(s)
+//				console.log(t)
+//				process.exit()
+			}
+			break
+		}
+		i = next(A, i)
+	}
 }
 
 function findEachs(A, f, sym) {
@@ -967,6 +1036,88 @@ function autoExports(A) {
 			A[i].type = 'space'
 			//F.join('\n')
 		}
+	}
+}
+
+function processIf2(A) {
+	/*
+		logic:
+		1. replace '❱' with ')', or '){' when the next token is on the same line
+		2. replace '◇' with
+			a. 'else if(' if followed by the next non-space character '❰'
+			b. 'else {' if the next token is on the same line
+			c. 'else'
+		3. replace '⁋' with '}'
+		4. replace '❰' with 'if ('
+	*/
+	function issym(sym) {
+		return A[i].type == 'sym' && A[i].s == sym
+	}
+	
+	function prev_sym_was_line() {
+		for (var n = i - 1; n >= 0; n--) {
+			if (A[n].type == 'line') return true
+			if (A[n].type != 'space') return false
+		}
+		return false
+	}
+
+	var last_if_is_oneliner = undefined
+	
+	for (var i = 0; i < A.length; i++) {
+		if (issym('❰')) {
+			A[i].s = 'if ('
+		}
+		if (issym('⁋')) {
+			A[i].s = '}'
+		}
+		if (issym('❱')) {
+			var oneliner = true
+			for (var n = i + 1; n < A.length; n++) {
+				if (A[n].type == 'space') continue
+				if (A[n].type == 'line') oneliner = false
+				break
+			}
+			A[i].s = oneliner ? ')' : ') {'
+			last_if_is_oneliner = oneliner
+			if (!oneliner) if (check_syntax_if_if_is_closed() == false) {
+				console.log(color(196)+'❰❱ is not a oneliner nor ends with ⁋'+color(7))
+				process.exit()
+			}
+		}
+		if (issym('◇')) {
+			var type = 'else'
+			for (var n = i + 1; n < A.length; n++) {
+				if (A[n].type == 'space') continue
+				if (issym('❰')) type = 'elseif'
+				if (A[n].type == 'line') type = 'else{'
+				break
+			}
+			var z = '} '
+			if (last_if_is_oneliner) {
+				if (!prev_sym_was_line()) z = ';'
+				else z = ''
+			}
+			if (type == 'else') A[i].s = z+'else'
+			if (type == 'elseif') A[i].s = z+'else if ('
+			if (type == 'else{') A[i].s = z+'else {'
+		}
+	}
+	
+	function check_syntax_if_if_is_closed() {
+		return true
+		/*
+			too hard to implement, will take whole day
+			so be careful
+		*/
+		var level = 0
+		for (var n = i + 1; n < A.length; n++) {
+			if (A[n].type == '⁋' && level == 0) return true
+			if (A[n].type == '❰') level++
+			if (A[n].type == '❱') level--
+			break
+		}
+		return false
 	}
 }
 

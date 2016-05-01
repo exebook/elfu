@@ -9,7 +9,6 @@ b ► B {
 }
 
 
-
-ロ ꗌJ
+ロ 'Total binds:', ⚷J↥
 ⛃ (process.env.HOME + '/.deodar/tabsnippets.js', 
 	'module.exports='+ꗌJ)

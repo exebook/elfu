@@ -85,3 +85,6 @@ literate = ➮ - a f {
 	}
 }
 
+yyd_get_terminal_width = ➮ {
+	$ ★(⛁'/var/tmp/yyd.term.width' ≂)
+}

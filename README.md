@@ -53,6 +53,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
   - [tuples with `ꔪ`][229]
   - [object keys as an array with `⚷`][230]
   - [namespace utility with `➮|`][231]
+  - [new syntax for branching with `❰` `❱` `◇` `⁋`][232]
  - [Usage][3]
  - [Dotcall syntax][4]
  - [Feedback][5]
@@ -105,6 +106,7 @@ Elfu is highly experimental symbolic language. UNICODE contains thousands and th
 [229]: https://github.com/exebook/elfu#tuples
 [230]: https://github.com/exebook/elfu#object-keys-as-an-array-with-
 [231]: https://github.com/exebook/elfu#namespace-utility-with--and-
+[232]: https://github.com/exebook/elfu#new-syntax-for-branching-with-
 
 #Screenshot
 Here is how Elfu looks in author's editor:
@@ -210,6 +212,7 @@ i ⬌ a ロ aⁱ
 a ∆ [1,2,3]
 i ► a ロ i
 // index still can be accessed with `_` + name, in this case `_i`.
+The `i` will be replaced with `a[i]`. Operator `►` either requires `{}` or the expression must be on a single line. (Otherwise Elfu would need to use the full blown expression parser, which is beyond the scope of the current version).
 ```
 
 ```javascript
@@ -690,7 +693,7 @@ b,a ꔪ obj
 ```
 ---
 
-##### namespace utility with '➮|' and '➮]'
+##### namespace utility with `➮|` and `➮]`
 If your elfu source file has `➮]` anywhere in it, then all top level declared functions of this file will be automatically exported to `module.exports`. If you use `➮|`, the functions will be exported as global variables.
 
 ######main.yy
@@ -714,6 +717,49 @@ scan()
 ➮|
 
 ```
+
+##### new syntax for branching with `❰` `❱` `◇` `⁋`][232]
+
+ - `❰` is typed as `q|TAB` or `[|TAB`.
+ - `❱` is typed as `w|TAB` or `]|TAB`.
+ - `◇` is typed as `e|TAB`.
+ - replace '❱' with ')', or '){' when the next token is on the same line.
+ - replace '◇' with:
+			a. 'else if(' if followed by the next non-space character '❰';
+			b. 'else {' if the next token is on the same line;
+			c. 'else'.
+ - replace '⁋' with '}'.
+ - replace '❰' with 'if ('.
+
+There is no `if` keyword or it's analog if you use this notation, the test condition is enclosed in `❰` and `❱`. The conditional statement is a one liner if it goes on the same line, otherwise end it with the `⁋`. Same is true with `else` which is `◇`.
+
+This syntax does not replace original JavaScript or original Elfu `if` `else` and `⌥` `⎇`, but coexist.
+
+```js
+❰a ≟ 5❱ a = c
+◇ b = 1
+
+❰a == 5❱ b = 4
+
+❰a == 5❱
+	b = 4
+◇
+	b = 6
+⁋
+❰a == 5❱ b = 4 ◇ b = 6
+
+❰a == 5❱ b = 4 ◇ ❰a == 5❱ b = 6
+
+
+❰a == 5❱ b = 4 ◇ ❰a == 5❱
+	b = 6
+⁋
+
+```
+
+##### extras
+	`__arrarr` - get the function arguments as an array.
+	`__elfuver` - return a string specifying current elfu version. This is read from `package.json`.
 
 #Usage
  - install with **npm**, `[sudo] npm i -g elfu`.
