@@ -1,3 +1,11 @@
+
+
+if (typeof elfu != 'undefined') {
+	function color(a) { return '\u001b[38;5;'+a+'m' }
+	console.log(color(1)+'Warning: requiring Elfu from Elfu.'+color(7))
+	return
+}
+
 var fs = require('fs')
 var convertor = require('./convert')
 var mod = require('module')

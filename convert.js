@@ -148,7 +148,10 @@ userSym('✚', 'viewCounter.')
 	var ix = '⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʱʳˢᵗᵘᵛʷˣʸᶻ',
 		re = '0123456789abcdefghijklmnopqrstuvwxyz'
 	var R = lex.lex(s)
-	for (var i = 0; i < ix.length; i++) simpleReplace(R, ix[i], '['+re[i]+']')
+	for (var i = 0; i < ix.length; i++) simpleReplace(R, ix[i], '['+re[i]+']','index')
+	
+	// using index is a real dirty hack
+	console.log(R)
 	{
 		for (var i = 0; i < a.length; i++)
 			if (a[i].type == 'auto')
@@ -516,6 +519,7 @@ function prevl(A, i) {
 	}
 }
 
+
 function simpleReplace(A, find, replace, type) {
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == find) {
@@ -878,6 +882,7 @@ else if (blk > 0) {
 			if (lastOf(R) && lastOf(R).type == 'id') break
 		}
 		else if (c.type == 'space') ;
+		else if (c.type == 'index') ;
 		else none = true
 		if (!none && c.type != 'space' && c.type != 'line') R.push(c)
 		if (none) break
@@ -1095,8 +1100,8 @@ function processIf2(A) {
 			}
 			var z = '} '
 			if (last_if_is_oneliner) {
-				if (!prev_sym_was_line()) z = ';'
-				else z = ''
+//				if (!prev_sym_was_line()) z = ';'
+//				else z = ''
 			}
 			if (type == 'else') A[i].s = z+'else'
 			if (type == 'elseif') A[i].s = z+'else if ('

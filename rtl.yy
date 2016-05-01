@@ -57,15 +57,16 @@ process_stdout_write_multi = ➮ {
 isArray = ➮ isArray { $ a.map ≟ Array.prototype.map }
 
 literate = ➮ - a f {
+	// callback: f(parent object, index/name, value, kind)
 	⌥ ⬤ a ≟ 'object' {
 		⌥ a.map {
 			i ► a {
 				⌥ ⬤i ≟ 'object' {
-					f(a, i_, aᵏ, 'arr')
+					f(a, i_, i, 'arr')
 					arguments.callee(i, f)
 				}
 				⥹ ⬤i ≟ 'string' || ⬤i ≟ 'number' {
-					f(a, i_, aᵏ, 'arr')
+					f(a, i_, i, ⬤i)
 				}
 			}
 		}
@@ -78,7 +79,7 @@ literate = ➮ - a f {
 					arguments.callee(o, f)
 				}
 				⥹ ⬤ k ≟ 'string' || ⬤k ≟ 'number' {
-					f(a, k, aᵏ)
+					f(a, k, aᵏ, ⬤k)
 				}
 			}
 		}
