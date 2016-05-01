@@ -151,7 +151,6 @@ userSym('✚', 'viewCounter.')
 	for (var i = 0; i < ix.length; i++) simpleReplace(R, ix[i], '['+re[i]+']','index')
 	
 	// using index is a real dirty hack
-	console.log(R)
 	{
 		for (var i = 0; i < a.length; i++)
 			if (a[i].type == 'auto')
