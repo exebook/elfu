@@ -28,7 +28,7 @@ loadFile = function loadFile(module, filename) {
 		s = s.substr(i)
 	}
 	var t = filename
-	var yy = convertor.elfuConvert('module.paths.push(".");'+s, filename)
+	var yy = convertor.elfuConvert('module.paths.push(__dirname);'+s, filename)
 	var R = module._compile(yy, filename)
 	return R
 }
@@ -55,4 +55,4 @@ mod._resolveFilename = function(request, parent) {
 	return old_resolveFilename(request, parent)
 }
 
-require('./rtl.yy')
+elfu_rtl = require('./rtl.yy')

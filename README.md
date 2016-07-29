@@ -235,6 +235,24 @@ if (true) ロ 'here'
 ➮ compare { ロ a == b; }
 ```
 
+Automatic `+` insertion. You can avoid `+` for brevity, because inside `ロ` all string literals can be automatically glued to identifiers and some obvious expressions with '+'. 
+
+```js
+x ∆ 12345
+a ∆ [1,2,3]
+
+ロ 'x = ' x
+ロ 'four means ' (2+2)
+ロ 'a = ' a ' and length is ' a↥
+
+```
+
+Elfu allows you to mix with `${}` style of strings.
+
+```js
+a ∆ 5678
+ロ `a = ${a}`
+```
 ---
 ##### if, else, elseif ⌥ ⎇ ⥹
  - typed as `if|TAB`, `el|TAB`, `ei|TAB`.
@@ -725,15 +743,36 @@ scan()
  - `◇` is typed as `e|TAB`.
  - replace '❱' with ')', or '){' when the next token is on the same line.
  - replace '◇' with:
-			a. 'else if(' if followed by the next non-space character '❰';
-			b. 'else {' if the next token is on the same line;
-			c. 'else'.
+			a. '} else if(' if followed by the next non-space character '❰';
+			b. '} else {' if the next token is on the same line;
+			c. 'else'. -- not possible, ◇ cannot be used with the oneliners.
  - replace '⁋' with '}'.
  - replace '❰' with 'if ('.
 
 There is no `if` keyword or it's analog if you use this notation, the test condition is enclosed in `❰` and `❱`. The conditional statement is a one liner if it goes on the same line, otherwise end it with the `⁋`. Same is true with `else` which is `◇`.
 
 This syntax does not replace original JavaScript or original Elfu `if` `else` and `⌥` `⎇`, but coexist.
+
+```js
+/*
+	Nested conditional expressions.
+	You cannot use ◇ with one-liners. But ◇ itself could have a oneliner expression.
+*/
+
+❰1❱
+	❰2❱
+		b = 3
+	◇
+		b = 4
+	⁋
+◇
+	❰5❱
+		b = 6
+	◇
+		b = 7
+	⁋
+⁋
+```
 
 ```js
 ❰a ≟ 5❱ a = c
@@ -757,6 +796,32 @@ This syntax does not replace original JavaScript or original Elfu `if` `else` an
 
 ```
 
+You can combine syntaxes like this:
+
+```js
+
+❰1❱
+	{ 2 }
+⎇  { 3 }
+```
+
+...or like this:
+
+```js
+❰1❱
+	{ 2 }
+else
+	{ 3 }
+```
+
+#####String array literals
+
+```js
+ロ [@ dormouse hare hatter]
+
+// [ 'dormouse', 'hare', 'hatter']
+```
+	
 ##### extras
 	`__arrarr` - get the function arguments as an array.
 	`__elfuver` - return a string specifying current elfu version. This is read from `package.json`.

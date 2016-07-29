@@ -75,6 +75,12 @@ isolated namespaces:
 ещё более улучшеный this:
 ⚫a = ⚫b 	можно же записать просто .a = .b
 
+allow: ❄() -> ❄
+
+---('cangive', ---) // replace tokens from previous line
+
+
+x ⌶= 'a b c'  -> x = 'a b c'⌶' '
  ----- typing ------
  change la to .la (ꕉ), le to .le
  
@@ -82,6 +88,39 @@ isolated namespaces:
 	ロ ꗌcurrent ≟ ꗌexpected
 	translates to:
 	console.log(JSON.stringify(current==JSON.stringify(expected)) 
+---- theory fro future ----
+have a outer function return statement in the inner function
+➮ a {
+	➮ b {
+		ロ 'error'
+		$$ ⦾
+	}
+	❰error❱ b() // will return ⦾ from both b() and a() imediately
+	maybe it is stupid, why not $b()?
+	$ ⦿
+}
+---- call operator -> ----
+test('p=zzz u=name po=888', 'user id password port phone',
+	{ password: 'zzz', user: 'name', port: '888' })
+
+test ->
+	'u=name 2 po=888 p=zzz'
+	'user id password port'
+	{ user: 'name', port: '888', password: 'zzz', id: '2' }
+
+парсинг функций: запятая добавляется только если строка на том же уровне отступа плюс за ней идёт строка на том-же уровне отступа. скобка вызова ставиться по завершении уровня отступа (шаге влево)
+
+test ->
+	'u=name 2 po=888 p=zzz'
+	'user id password port'
+	sub ->
+		2 + 2
+		'result'
+	➮ f {
+		ロ a
+	}
+	{ user: 'name', port: '888', password: 'zzz', id: '2' }
+------------------
 
 */
 
@@ -137,39 +176,46 @@ function getId() {
 }
 
 function elfuConvert(s, fileName) {
-	s = processIncludes(s, fileName)
-	var a = userReplace
-	for (var i = 0; i < a.length; i++)
-		elfuLexerSyms += ' ' + a[i].find
-userSym('⏚', 'sendCallback')
-userSym('☎', 'dispatcher')
-userSym('✚', 'viewCounter.')
-	var t = '❶❷❸❹❺❻❼❽❾❿', d = '①②③④⑤⑥⑦⑧⑨⑩'
-	var ix = '⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʱʳˢᵗᵘᵛʷˣʸᶻ',
-		re = '0123456789abcdefghijklmnopqrstuvwxyz'
-	var R = lex.lex(s)
-	for (var i = 0; i < ix.length; i++) simpleReplace(R, ix[i], '['+re[i]+']','index')
-	
-	// using index is a real dirty hack
-	{
-		for (var i = 0; i < a.length; i++)
-			if (a[i].type == 'auto')
-				autoArg(R, a[i].find, a[i].repl, 'id')
-			else if (a[i].type == 'lenin')
-				leninArg(R, a[i].find, a[i].repl, 'id')
-			else
-				simpleReplace(R, a[i].find, a[i].repl, 'id')
-		for (var i = 0; i < t.length; i++) {
-			var t1 = t[i], d1 = d[i]
-			simpleReplace(R, t1, ';var var'+ i +' = ')
-			varReplace(R, d1, 'var'+ i, 'id')
+	var R
+	function replaceIndex() {
+		for (var i = 0; i < userReplace.length; i++)
+			elfuLexerSyms += ' ' + userReplace[i].find
+//		userSym('⏚', 'sendCallback')
+//		userSym('☎', 'dispatcher')
+//		userSym('✚', 'viewCounter.')
+		var ix = '⁰¹²³⁴⁵⁶⁷⁸⁹ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʱʳˢᵗᵘᵛʷˣʸᶻ',
+			re = '0123456789abcdefghijklmnopqrstuvwxyz'
+		R = lex.lex(s)
+		for (var i = 0; i < ix.length; i++) simpleReplace(R, ix[i], '['+re[i]+']','index')
+	}
+	function replaceUser() {
+		var a = userReplace
+		
+		// using index is a real dirty hack
+		var t = '❶❷❸❹❺❻❼❽❾❿', d = '①②③④⑤⑥⑦⑧⑨⑩'
+		{
+			for (var i = 0; i < a.length; i++)
+				if (a[i].type == 'auto')
+					autoArg(R, a[i].find, a[i].repl, 'id')
+				else if (a[i].type == 'lenin')
+					leninArg(R, a[i].find, a[i].repl, 'id')
+				else
+					simpleReplace(R, a[i].find, a[i].repl, 'id')
+			for (var i = 0; i < t.length; i++) {
+				var t1 = t[i], d1 = d[i]
+				simpleReplace(R, t1, ';var var'+ i +' = ')
+				varReplace(R, d1, 'var'+ i, 'id')
+			}
 		}
 	}
-	
+	replaceIndex()
+	s = processIncludes(s, fileName)
+	processStringArrays(R)//before findLog
+	findLog(R, 'ロ')
+	replaceUser()
 	findVar(R)
 	findDefineIfUndefined(R)
 //	autoArg(R, 'ロロ', 'process.stdout.write')
-	findLog(R, 'ロ')
 	findStdoutWrite(R, 'ロロ')
 //	findLog(R, '#')
 	findStrEqu(R, '≈', '=')
@@ -255,7 +301,7 @@ function loc(n) {
 //TODO: replace with loc()
 var setFuncs = {}
 
-namespace = {}
+//namespace = {}
 
 function xeval (s) {
 	return eval(s)
@@ -542,13 +588,56 @@ function varReplace(A, find, replace, type) {
 }
 
 function findLog(A, find) {
+	function validAutoPlusBefore(a) {
+		if (a.type == 'id' || a.type == 'num') return true
+		var Y = {'↥':1,'↟':1,'ꕉ':1,']':1,')':1,'}':1,'⁰':1}
+		if (a.type == 'index') return true
+		if (a.type == 'sym' && Y[a.s] == 1) return true
+		return false
+	}
+	function validAutoPlusAfter(a) {
+		if (a.type == 'id' || a.type == 'num') return true
+		var Y = {'ꗌ':1,'↥':1,'↟':1,'ꕉ':1,'⁰':1, '(':1,'[':1,'{':1}
+		if (a.type == 'index') return true
+		if (a.type == 'sym' && Y[a.s] == 1) return true
+		return false
+	}
 	for (var i = 0; i < A.length; i++) {
 		if (A[i].s == find) {
 			var I = i
 			A[i].s = 'console.log('
 			while (A[i] && A[i].type != 'line' && A[i].s != ';' && A[i].s != '⦙') i++
+			
 			if (!A[i]) A[i] = {type:'repl',s:')'}
 			else addTo(A[i], ')')
+			// iterate forward, replace ['' x ''] with  [''+x '']
+			for (var x = I; x < i; x++) {
+				if (A[x].type == 'str') {
+					x++; if (x == i) break;
+					while (A[x].type == 'space') x++
+					if (x >= i) break;
+					if (validAutoPlusAfter(A[x])) {
+						var delim = '+'
+						if (A[x].s == '{') delim = ','
+						addTo(A[x], delim)
+					}
+				}
+			}
+			// iterate backward, replace ['' x ''] with  ['' x+'']
+			for (var x = i; x >= I; x--) {
+				if (A[x].type == 'str') {
+					var x2 = x
+					x--; if (x < I) break;
+					while (A[x].type == 'space') x--
+					if (x < I) break;
+					if (validAutoPlusBefore(A[x])) {
+						var delim = '+'
+						if (A[x].s == '}') delim = ','
+						addTo(A[x2], delim)
+					}
+				}
+			}
+			
 			for (var space = I; space < i; space++) {
 				if (A[space].type == 'space') A[space].s = ''
 			}
@@ -980,7 +1069,7 @@ function findTuples(A, symbol) {
 			for (var n = 0; n < list.length; n++) {
 				R.push(list[n] + '=' + '__elfu_left[' + n + ']')
 			}
-			addTo(A[end-1],';'+R.join(',')+';')
+			addTo(A[end-1],';var '+R.join(',')+';')
 		}
 	}
 }
@@ -1005,7 +1094,7 @@ function autoExports(A) {
 			if (A[i].s == 'function') {
 				for (var j = i + 1; j < i + 3; j++) {
 					if (A[j].type == 'id') {
-						name = A[j].s
+						var name = A[j].s
 						if (renameWithPrefix) A[i].s = A[j].s + '=' + A[i].s
 						R.push(name)
 						for (var k = j + 1; k < j + 256; k++) {
@@ -1046,15 +1135,15 @@ function autoExports(A) {
 function processIf2(A) {
 	/*
 		logic:
-		1. replace '❱' with ')', or '){' when the next token is on the same line
+		1. replace '❱' with ')', or '){' when the next token is on the same line and is not {
 		2. replace '◇' with
 			a. 'else if(' if followed by the next non-space character '❰'
-			b. 'else {' if the next token is on the same line
+			b. 'else {' if the next token is on the next line
 			c. 'else'
 		3. replace '⁋' with '}'
 		4. replace '❰' with 'if ('
 	*/
-	function issym(sym) {
+	function issym(sym, i) {
 		return A[i].type == 'sym' && A[i].s == sym
 	}
 	
@@ -1065,49 +1154,71 @@ function processIf2(A) {
 		}
 		return false
 	}
-
-	var last_if_is_oneliner = undefined
+	
+	function is_block(i) {
+		for (; i < A.length; i++) {
+			if (A[i].type == 'space') continue
+			if (A[i].type == 'line') continue
+			return A[i].type == 'sym' && A[i].s == '{'
+		}
+		return false
+	}
+	
+	function scan_block(i) {
+		var block = is_block(i+1)
+		var R = { block: block }
+		for (var n = i + 1; n < A.length; n++) {
+			if (A[n].type == 'space') continue
+			if (A[n].type == 'line') break
+			// oneliner if() detected
+			for (var k = n + 1; k < A.length; k++) {
+				if (A[k].type == 'line' || A[k].s == '◇' || A[k].s == '❰') {
+					if (!block) R.pos = k
+					break
+				}
+			}
+			break
+		}
+		if (R.pos) {
+			var o = A[R.pos]
+			if (o.type == 'line') addTo(o, ' } ')
+		}
+		return R
+	}
 	
 	for (var i = 0; i < A.length; i++) {
-		if (issym('❰')) {
+		if (issym('❰',i)) {
 			A[i].s = 'if ('
 		}
-		if (issym('⁋')) {
+		if (issym('⁋',i)) {
 			A[i].s = '}'
 		}
-		if (issym('❱')) {
-			var oneliner = true
-			for (var n = i + 1; n < A.length; n++) {
-				if (A[n].type == 'space') continue
-				if (A[n].type == 'line') oneliner = false
-				break
-			}
-			A[i].s = oneliner ? ')' : ') {'
-			last_if_is_oneliner = oneliner
-			if (!oneliner) if (check_syntax_if_if_is_closed() == false) {
-				console.log(color(196)+'❰❱ is not a oneliner nor ends with ⁋'+color(7))
-				process.exit()
-			}
+		if (issym('❱',i)) {
+			var oneliner = true, line_char
+			var scan = scan_block(i)
+			if (scan.block) A[i].s = ')'
+			else A[i].s = ') {'
 		}
-		if (issym('◇')) {
+		if (issym('◇',i)) {
 			var type = 'else'
 			for (var n = i + 1; n < A.length; n++) {
 				if (A[n].type == 'space') continue
-				if (issym('❰')) type = 'elseif'
-				if (A[n].type == 'line') type = 'else{'
+				if (issym('❰',n)) type = 'elseif'
 				break
 			}
-			var z = '} '
-			if (last_if_is_oneliner) {
-//				if (!prev_sym_was_line()) z = ';'
-//				else z = ''
+			if (type == 'else') {
+				A[i].s = '} else'
+				var scan = scan_block(i)
+				if (scan.block) A[i].s = ''
+				else A[i].s = '} else {'
 			}
-			if (type == 'else') A[i].s = z+'else'
-			if (type == 'elseif') A[i].s = z+'else if ('
-			if (type == 'else{') A[i].s = z+'else {'
+			if (type == 'elseif') {
+				A[i].s = '} else'
+			}
+			
 		}
 	}
-	
+
 	function check_syntax_if_if_is_closed() {
 		return true
 		/*
@@ -1123,5 +1234,37 @@ function processIf2(A) {
 		}
 		return false
 	}
+}
+
+function clearToken(A, i) {
+	A[i].s = ''
+	A[i].type = 'space'
+}
+
+function processStringArrays(A) {
+	for (var i = 0; i < A.length; i++) {
+		if (A[i].type == 'sym' && A[i].s == '[@') {
+			clearToken(A, i)
+			var list = []
+			var nested = 0
+			for (var n = i + 1; n < A.length; n++) {
+				if (A[n].type == 'sym' && A[n].s == '[') {
+					nested++
+				}
+				else if (A[n].type == 'sym' && A[n].s == ']') {
+					if (nested-- == 0) {
+						clearToken(A, n)
+						var txt = lex.join(list)
+						txt = txt.split(' ').filter(function(a){return a.length>0})
+						addTo(A[i], JSON.stringify(txt).replace(/"/g,'\''))
+						break
+					}
+				}
+				list.push({type:A[n].type, s:A[n].s})
+				clearToken(A, n)
+			}
+		}
+	}
+	return false
 }
 

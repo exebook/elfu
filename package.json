@@ -2,7 +2,7 @@
   "main": "./elfu.js",
   "name": "elfu",
   "description": "Programming language that elves use",
-  "version": "0.0.33",
+  "version": "0.0.37",
   "bin": {
     "yy": "./bin/yy",
     "yyj": "./bin/yyj",

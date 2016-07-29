@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // --max_old_space_size=1400 --max_new_space_size=1024
-if (process.argv.indexOf('node') >= 0) {
+
+if (process.argv[0].indexOf('node') >= 0) {
 	process.oldArgv = process.argv.shift()
 }
 var name = process.argv[1]
@@ -8,17 +9,19 @@ if (name == undefined) {
 	console.log('elfu error: no input file')
 	return
 }
+
 elfu = require('elfu')
 if (name == '-v' || name == '--version') {
 	console.log(elfu.version)
 	return
 }
+
 elfu.handleExt('.yy')
 elfu.userSym('⏚', 'ground')
 module.paths.push(process.cwd())
+
 
 if (name[0] == '.') name = process.cwd() + '/' + name
 
 //elfu.require(__dirname.split('/').slice(0, -1).join('/') + '/rtl.yy')
 elfu.require(name)
-
